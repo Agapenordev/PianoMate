@@ -22,6 +22,7 @@
 - [Writing lessons](#writing-lessons)
 - [Project layout](#project-layout)
 - [Credits](#credits)
+- [License](#license)
 
 ## Features
 
@@ -212,3 +213,8 @@ docs/screenshots/      Images used in this README
 - **Fonts** (`crates/pianomate/ui/fonts`): [Bravura](https://github.com/steinbergmedia/bravura) for music symbols and [EB Garamond](https://github.com/octaviopardo/EBGaramond12), both under the SIL Open Font License.
 - **Images**: public-domain paintings and portraits. Sources and licences are in [`content/images/CREDITS.md`](content/images/CREDITS.md).
 - **Repertoire**: public-domain works by Hanon, Czerny, Bach and his circle, Beethoven, Mozart, Burgmüller, Clementi and Chopin. All lesson text, exercises and arrangements are original to PianoMate.
+
+## License
+
+PianoMate's code and lesson content are under the [MIT License](LICENSE).
+The bundled fonts keep their SIL Open Font License, and the images are public domain.
