@@ -5,6 +5,7 @@ members = ["crates/*"]
 [workspace.package]
 edition = "2024"
 version = "0.1.0"
+license = "MIT"
 
 # Optimise dependencies in dev builds: the synth runs on the realtime audio thread and crackles unoptimised.
 [profile.dev.package."*"]

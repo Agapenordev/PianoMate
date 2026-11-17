@@ -2,6 +2,7 @@
 name = "pianomate"
 edition.workspace = true
 version.workspace = true
+license.workspace = true
 
 [dependencies]
 pianomate-core = { path = "../pianomate-core" }
