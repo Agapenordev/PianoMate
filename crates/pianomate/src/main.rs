@@ -1,3 +1,6 @@
+// No console window behind the app on Windows release builds.
+#![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
+
 mod audio;
 
 use std::{
@@ -122,6 +125,12 @@ fn today() -> u64 {
 }
 
 fn main() -> Result<(), Box<dyn Error>> {
+    // A packaged release keeps content/ and assets/ beside the executable; launched from elsewhere, look there.
+    if !Path::new(CONTENT).exists() {
+        if let Some(dir) = std::env::current_exe().ok().and_then(|e| e.parent().map(Path::to_path_buf)) {
+            let _ = std::env::set_current_dir(dir);
+        }
+    }
     let sf_path = std::env::args().nth(1).unwrap_or("assets/piano.sf2".into());
     let lessons = load_lessons(&format!("{CONTENT}/lessons"))?;
     let ids: Vec<&str> = lessons.iter().map(|l| l.id.as_str()).collect();

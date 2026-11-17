@@ -17,6 +17,7 @@
 - [Features](#features)
 - [Screenshots](#screenshots)
 - [The road](#the-road)
+- [Download](#download)
 - [Getting started](#getting-started)
 - [Controls](#controls)
 - [Writing lessons](#writing-lessons)
@@ -102,7 +103,20 @@ At first launch you pick one of four goals, and each gets its own road:
 - songs and accompaniment
 - reading for pleasure
 
+## Download
+
+Get the latest package for your system from [Releases](https://github.com/Agapenordev/PianoMate/releases/latest). A piano sound is included.
+
+- **Windows**: unzip `PianoMate-…-windows-x86_64.zip` and run `pianomate.exe`. Windows SmartScreen may warn about an unsigned app: choose *More info → Run anyway*.
+- **Linux**: `tar xzf PianoMate-…-linux-x86_64.tar.gz`, then run `./pianomate` from that folder. Needs ALSA, fontconfig and xkbcommon, which most desktops already have.
+
+Keep the executable next to its `content` and `assets` folders. Plug in a MIDI keyboard at any time, or play with the computer keys.
+
+To publish a new release, push a tag such as `v0.1.0`; GitHub Actions builds and uploads both packages.
+
 ## Getting started
+
+To build from source instead:
 
 **Requirements**
 - Rust (stable)

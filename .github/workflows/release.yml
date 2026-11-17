@@ -1,0 +1,57 @@
+name: Release
+
+# Push a tag like v0.1.0 to build Windows and Linux packages and publish them as a GitHub release.
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+env:
+  # GeneralUser GS SoundFont, pinned to a commit; its licence allows redistribution.
+  SF2_URL: https://github.com/mrbumpy409/GeneralUser-GS/raw/684543d5e5efaef08d02be50dcda8d552478fa60
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-22.04 # older glibc, so the binary runs on more distributions
+            name: linux-x86_64
+            exe: pianomate
+          - os: windows-latest
+            name: windows-x86_64
+            exe: pianomate.exe
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+
+      - name: Linux build dependencies
+        if: runner.os == 'Linux'
+        run: sudo apt-get update && sudo apt-get install -y libasound2-dev libfontconfig1-dev libxkbcommon-dev
+
+      - run: cargo test --release
+      - run: cargo build --release
+
+      - name: Package
+        shell: bash
+        run: |
+          dir="PianoMate-${GITHUB_REF_NAME}-${{ matrix.name }}"
+          mkdir -p "$dir/assets"
+          cp "target/release/${{ matrix.exe }}" README.md LICENSE "$dir/"
+          cp -r content "$dir/"
+          curl -fsSL "$SF2_URL/GeneralUser-GS.sf2" -o "$dir/assets/piano.sf2"
+          curl -fsSL "$SF2_URL/documentation/LICENSE.txt" -o "$dir/assets/SoundFont-LICENSE.txt"
+          if [ "$RUNNER_OS" = Windows ]; then
+            7z a "$dir.zip" "$dir" > /dev/null && echo "ASSET=$dir.zip" >> "$GITHUB_ENV"
+          else
+            tar czf "$dir.tar.gz" "$dir" && echo "ASSET=$dir.tar.gz" >> "$GITHUB_ENV"
+          fi
+
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: ${{ env.ASSET }}
+          generate_release_notes: true
