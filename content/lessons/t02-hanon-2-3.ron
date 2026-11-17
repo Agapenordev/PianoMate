@@ -1,0 +1,50 @@
+(
+    id: "t02-hanon-2-3",
+    title: "Hanon No. 2 and No. 3",
+    summary: "Two more patterns that wake up the ring finger and little finger.",
+    source: "Charles-Louis Hanon, The Virtuoso Pianist in 60 Exercises (1873), Nos. 2 and 3",
+    steps: [
+        Explain(
+            text: "Fingers 4 and 5 are the weakest in every hand, and fast music exposes them at once. Hanon's second and third exercises aim straight at them. Both begin like No. 1, with a skip after the thumb.",
+        ),
+        Play(
+            prompt: "No. 2, bar 1. Fingers 1 2 5 4 3 4 3 2: the little finger arrives early and fingers 3 and 4 alternate.",
+            rh: "C4/0.25@1 E4@2 A4@5 G4@4 F4@3 G4@4 F4@3 E4@2",
+            hint: true,
+            tips: [
+                "The little finger arrives early: prepare it as finger 2 plays.",
+                "Fingers 3 and 4 alternate: keep them equally strong.",
+            ],
+        ),
+        Play(
+            prompt: "No. 2, bars 1 and 2: the same shape from C, then from D.",
+            rh: "C4/0.25 E4 A4 G4 F4 G4 F4 E4 D4 F4 B4 A4 G4 A4 G4 F4",
+            tips: [
+                "Same shape, one key higher: let the hand shift as one unit.",
+                "Keep fingers 4 and 5 rounded, not collapsing.",
+            ],
+        ),
+        Quiz(
+            question: "In Hanon's exercises, what changes each time the pattern repeats?",
+            choices: ["The fingering", "The starting key, one step higher", "The rhythm"],
+            answer: 1,
+        ),
+        Play(
+            prompt: "No. 3, bar 1. Fingers 1 2 5 4 3 2 3 4: it walks down from the little finger, then turns back up.",
+            rh: "C4/0.25@1 E4@2 A4@5 G4@4 F4@3 E4@2 F4@3 G4@4",
+            hint: true,
+            tips: [
+                "The hand walks down from finger 5, then turns: a small wave shape.",
+                "Keep each note crisp and even.",
+            ],
+        ),
+        Play(
+            prompt: "No. 3, bars 1 and 2. Because bar 1 ends going up, the hand flows straight into bar 2.",
+            rh: "C4/0.25 E4 A4 G4 F4 E4 F4 G4 D4 F4 B4 A4 G4 F4 G4 A4",
+            tips: [
+                "Bar 1 ends going up, so the hand flows straight into bar 2 without stopping.",
+                "Speed only once both bars are perfectly even.",
+            ],
+        ),
+    ],
+)

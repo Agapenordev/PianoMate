@@ -1,0 +1,62 @@
+(
+    id: "rv2-bass-reading",
+    title: "Reading Review: The Bass Clef",
+    summary: "Lines G-B-D-F-A and spaces A-C-E-G, until they are automatic.",
+    steps: [
+        Explain(
+            text: "Bass clef lines from the bottom: G, B, D, F, A. Spaces: A, C, E, G. Read each note, then find it.",
+            show: Staff(Bass, ["F3", "C3", "G2", "E3", "A2"]),
+        ),
+        Quiz(
+            question: "Name this note.",
+            show: Staff(Bass, ["F3"]),
+            choices: ["F", "G", "A"],
+            answer: 0,
+        ),
+        Quiz(
+            question: "Name this note.",
+            show: Staff(Bass, ["C3"]),
+            choices: ["G", "A", "C"],
+            answer: 2,
+        ),
+        Find(
+            prompt: "Now find it on your piano.",
+            keys: ["C3"],
+            show: Staff(Bass, ["C3"]),
+        ),
+        Quiz(
+            question: "Name this note.",
+            show: Staff(Bass, ["G2"]),
+            choices: ["B", "G", "A"],
+            answer: 1,
+        ),
+        Quiz(
+            question: "Name this note.",
+            show: Staff(Bass, ["E3"]),
+            choices: ["E", "G", "A"],
+            answer: 0,
+        ),
+        Find(
+            prompt: "Now find it on your piano.",
+            keys: ["E3"],
+            show: Staff(Bass, ["E3"]),
+        ),
+        Quiz(
+            question: "Name this note.",
+            show: Staff(Bass, ["A2"]),
+            choices: ["G", "B", "A"],
+            answer: 2,
+        ),
+        Quiz(
+            question: "Name this note.",
+            show: Staff(Bass, ["D3"]),
+            choices: ["A", "D", "G"],
+            answer: 1,
+        ),
+        Find(
+            prompt: "Now find it on your piano.",
+            keys: ["D3"],
+            show: Staff(Bass, ["D3"]),
+        ),
+    ],
+)

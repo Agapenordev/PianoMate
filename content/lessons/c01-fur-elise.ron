@@ -1,0 +1,47 @@
+(
+    id: "c01-fur-elise",
+    title: "Für Elise: the Opening",
+    summary: "The most recognisable bars in piano music, right hand alone.",
+    source: "Ludwig van Beethoven, Bagatelle in A minor, WoO 59, \"Für Elise\" (c. 1810)",
+    steps: [
+        Explain(
+            text: "Beethoven wrote this little piece around 1810 and never published it; it was found forty years after his death. The opening rocks between two neighbouring keys, E and the black key just below it, D sharp.",
+            show: Keyboard(["D#5", "E5"]),
+        ),
+        Play(
+            prompt: "The famous rocking figure, then the fall to A. Start with finger 5 on E and finger 4 on D sharp.",
+            rh: "E5/0.25 D#5 E5 D#5 E5 B4 D5 C5 A4/0.5",
+            hint: true,
+            tips: [
+                "Fingers 5 and 4 rock gently on E and D sharp: no lifting, just a small sideways roll.",
+                "Play softly; this opening is a whisper, not a shout.",
+            ],
+        ),
+        Explain(
+            text: "After that A, the music climbs back up through broken chords: the notes of a chord played one at a time. First A minor (C, E, A), then E major (E, G sharp, B).",
+            show: Keyboard(["C4", "E4", "A4", "G#4", "B4"]),
+        ),
+        Quiz(
+            question: "What is a broken chord?",
+            choices: ["A chord with a wrong note", "The notes of a chord played one after another", "Two hands playing the same note"],
+            answer: 1,
+        ),
+        Play(
+            prompt: "The two climbs: C, E, A up to B, then E, G sharp, B up to C.",
+            rh: "C4/0.25 E4 A4 B4/0.5 E4/0.25 G#4 B4 C5/0.5",
+            hint: true,
+            tips: [
+                "Each climb is a broken chord: the hand opens, the notes flow upward.",
+                "Let the last note of each climb rest a moment before moving on.",
+            ],
+        ),
+        Play(
+            prompt: "The whole opening, read from the staff.",
+            rh: "E5/0.25 D#5 E5 D#5 E5 B4 D5 C5 A4/0.5 C4/0.25 E4 A4 B4/0.5 E4/0.25 G#4 B4 C5/0.5",
+            tips: [
+                "Play it slowly enough that it never stops; a steady pulse matters more than speed.",
+                "Use In time at 60% once the notes are sure.",
+            ],
+        ),
+    ],
+)

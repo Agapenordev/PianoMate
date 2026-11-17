@@ -1,0 +1,59 @@
+(
+    id: "t04-more-scales",
+    title: "More Major Scales: D, A and F",
+    summary: "The same step pattern from new starting notes, and the fingerings that go with it.",
+    steps: [
+        Explain(
+            text: "Every major scale follows one pattern: whole, whole, half, whole, whole, whole, half. Start on D and two notes must be sharp.",
+            show: Keys((from: "D4", to: "D5", marks: [("D4", "1"), ("E4", "2"), ("F#4", "3"), ("G4", "1"), ("A4", "2"), ("B4", "3"), ("C#5", "4"), ("D5", "5")], arcs: [("F#4", "G4", "H"), ("C#5", "D5", "H")])),
+        ),
+        Quiz(
+            question: "Which two notes are sharp in D major?",
+            show: Music("key=2 D4/1 E4 F#4 G4 | A4 B4 C#5 D5", ""),
+            choices: ["F and C", "C and G", "F and B"],
+            answer: 0,
+        ),
+        Play(
+            prompt: "D major, up and down. Same thumb crossing as C: after finger 3.",
+            rh: "key=2 D4/0.5@1 E4@2 F#4@3 G4@1 A4@2 B4@3 C#5@4 D5@5 | C#5@4 B4@3 A4@2 G4@1 F#4@3 E4@2 D4/1@1",
+            beats_per_bar: 4,
+            bpm: 70,
+            tips: [
+                "F sharp and C sharp fall under fingers 3 and 4: the hand sits a little forward.",
+                "Keep it even; black keys tempt you to play louder.",
+            ],
+        ),
+        Explain(
+            text: "A major adds a third sharp, G sharp. The fingering is still 1 2 3, thumb under, 1 2 3 4 5.",
+            show: Keys((from: "A4", to: "A5", marks: [("A4", "1"), ("B4", "2"), ("C#5", "3"), ("D5", "1"), ("E5", "2"), ("F#5", "3"), ("G#5", "4"), ("A5", "5")])),
+        ),
+        Play(
+            prompt: "A major, up and down.",
+            rh: "key=3 A4/0.5@1 B4@2 C#5@3 D5@1 E5@2 F#5@3 G#5@4 A5@5 | G#5@4 F#5@3 E5@2 D5@1 C#5@3 B4@2 A4/1@1",
+            beats_per_bar: 4,
+            bpm: 70,
+            tips: [
+                "Three sharps: C, F and G. Fingers 3 and 4 live on black keys.",
+                "Same thumb crossing as C and D: after finger 3.",
+            ],
+        ),
+        Explain(
+            text: "F major has one flat, B flat, and a new fingering: the thumb crosses after finger 4, so finger 4 lands on B flat.",
+            show: Keys((from: "F4", to: "F5", marks: [("F4", "1"), ("G4", "2"), ("A4", "3"), ("A#4", "4"), ("C5", "1"), ("D5", "2"), ("E5", "3"), ("F5", "4")], arcs: [("A#4", "C5", "thumb under")])),
+        ),
+        Play(
+            prompt: "F major: 1 2 3 4, thumb under, 1 2 3 4.",
+            rh: "key=-1 F4/0.5@1 G4@2 A4@3 Bb4@4 C5@1 D5@2 E5@3 F5@4 | E5@3 D5@2 C5@1 Bb4@4 A4@3 G4@2 F4/1@1",
+            beats_per_bar: 4,
+            bpm: 70,
+            tips: [
+                "Finger 4 on B flat, then the thumb crosses under to C.",
+                "This fingering is different from C, G and D: say it aloud once before playing.",
+            ],
+        ),
+        Explain(
+            text: "Once each scale is clean at your own pace, switch to In time at 60% and move up as it settles.",
+            show: Figure("pulse"),
+        ),
+    ],
+)

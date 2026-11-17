@@ -1,0 +1,62 @@
+(
+    id: "rv1-middle-c-reading",
+    title: "Reading Review: Middle C Position",
+    summary: "Name notes quickly around Middle C, then find them.",
+    steps: [
+        Explain(
+            text: "Quick-fire reading. Use the landmarks: treble G on the second line, bass F on the fourth line, Middle C between the staves.",
+            show: Staff(Treble, ["G4", "D4", "F4", "C4", "E4"]),
+        ),
+        Quiz(
+            question: "Name this note.",
+            show: Staff(Treble, ["G4"]),
+            choices: ["G", "C", "D"],
+            answer: 0,
+        ),
+        Quiz(
+            question: "Name this note.",
+            show: Staff(Treble, ["D4"]),
+            choices: ["C", "E", "D"],
+            answer: 2,
+        ),
+        Find(
+            prompt: "Now find it on your piano.",
+            keys: ["D4"],
+            show: Staff(Treble, ["D4"]),
+        ),
+        Quiz(
+            question: "Name this note.",
+            show: Staff(Treble, ["F4"]),
+            choices: ["D", "F", "C"],
+            answer: 1,
+        ),
+        Quiz(
+            question: "Name this note.",
+            show: Staff(Treble, ["C4"]),
+            choices: ["C", "D", "E"],
+            answer: 0,
+        ),
+        Find(
+            prompt: "Now find it on your piano.",
+            keys: ["C4"],
+            show: Staff(Treble, ["C4"]),
+        ),
+        Quiz(
+            question: "Name this note.",
+            show: Staff(Treble, ["E4"]),
+            choices: ["C", "D", "E"],
+            answer: 2,
+        ),
+        Quiz(
+            question: "Name this note.",
+            show: Staff(Treble, ["A4"]),
+            choices: ["D", "A", "C"],
+            answer: 1,
+        ),
+        Find(
+            prompt: "Now find it on your piano.",
+            keys: ["A4"],
+            show: Staff(Treble, ["A4"]),
+        ),
+    ],
+)

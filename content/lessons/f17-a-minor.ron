@@ -1,0 +1,58 @@
+(
+    id: "f17-a-minor",
+    title: "A Minor",
+    summary: "The relative minor of C: same white keys, a darker home, and the G sharp that makes it pull.",
+    steps: [
+        Explain(
+            text: "A minor uses exactly the white keys of C major, but its home note is A. Start and end on A and the same keys sound darker. That is why A minor is called the relative minor of C.",
+            show: Keys((from: "A3", to: "A4", marks: [("A3", "home"), ("B3", "B"), ("C4", "C"), ("D4", "D"), ("E4", "E"), ("F4", "F"), ("G4", "G"), ("A4", "home")])),
+        ),
+        Quiz(
+            question: "Which minor key shares every note with C major?",
+            choices: ["E minor", "A minor", "D minor"],
+            answer: 1,
+        ),
+        Explain(
+            text: "The minor sound lives in the third. A to C is three half steps (a minor 3rd); C to E is four (a major 3rd). Right hand: thumb on A, fingers 1 to 5 over A B C D E.",
+            show: Keys((from: "A4", to: "E5", marks: [("A4", "1"), ("B4", "2"), ("C5", "3"), ("D5", "4"), ("E5", "5")], arcs: [("A4", "C5", "minor 3rd")])),
+        ),
+        Play(
+            prompt: "Up and down the A minor five-finger position.",
+            rh: "A4/1@1 B4@2 C5@3 D5@4 | E5/2@5 D5/1@4 C5/1@3 | B4/1@2 C5/1@3 B4/1@2 A4/1@1 | A4/4@1",
+            beats_per_bar: 4,
+            hint: true,
+            tips: [
+                "Lean slightly into A on beat one of the last bar: it is the home note now, not C.",
+                "Keep the thumb resting on A even while the other fingers play.",
+            ],
+        ),
+        Find(
+            prompt: "Find the A minor chord: A, C and E around middle C.",
+            keys: ["A3", "C4", "E4"],
+        ),
+        Explain(
+            text: "Minor keys borrow one black key: the 7th note, G, is raised to G sharp. It turns the E chord major (E-G♯-B) so it leans hard back to A. Left hand: Am, Dm, E, Am, with the thumb moving least.",
+            show: Keys((from: "G#2", to: "F3", marks: [("A2", "Am"), ("C3", "Am"), ("E3", "Am/E"), ("D3", "Dm"), ("F3", "Dm"), ("G#2", "E"), ("B2", "E")])),
+        ),
+        Play(
+            prompt: "Left hand: Am, Dm, E, Am.",
+            lh: "A2+C3+E3/4@5+3+1 | A2+D3+F3/4@5+2+1 | G#2+B2+E3/4@5+3+1 | A2+C3+E3/4@5+3+1",
+            beats_per_bar: 4,
+            hint: true,
+            tips: [
+                "A stays under finger 5 for Am and Dm; only the upper notes move.",
+                "For the E chord the little finger slides down a half step to G sharp: listen to it pull back to A.",
+            ],
+        ),
+        Play(
+            prompt: "A short A minor tune over the chords you just played.",
+            rh: "E5/1@5 D5/1@4 C5/1@3 B4/1@2 | D5/2@4 A4/2@1 | B4/1@2 C5/1@3 D5/1@4 B4/1@2 | A4/4@1",
+            lh: "A2+C3+E3/4@5+3+1 | A2+D3+F3/4@5+2+1 | G#2+B2+E3/4@5+3+1 | A2+C3+E3/4@5+3+1",
+            beats_per_bar: 4,
+            tips: [
+                "Play the left-hand chord exactly with the first melody note of each bar, then hold it.",
+                "Let the melody sing over the chords: left hand softer than the right.",
+            ],
+        ),
+    ],
+)

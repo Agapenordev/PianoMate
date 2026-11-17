@@ -1,0 +1,46 @@
+(
+    id: "p01-four-chords",
+    title: "Four Chords That Play a Thousand Songs",
+    summary: "Major and minor chords, and the I–V–vi–IV loop under countless pop songs.",
+    steps: [
+        Explain(
+            text: "A major chord is a big 3rd with a small 3rd on top. Swap them and it turns minor: darker, more wistful.",
+            show: Keys((from: "C3", to: "E4", marks: [("C3", "C"), ("E3", "E"), ("G3", "G"), ("A3", "A"), ("C4", "C"), ("E4", "E")], arcs: [("C3", "E3", "big 3rd"), ("E3", "G3", "small"), ("A3", "C4", "small 3rd"), ("C4", "E4", "big")])),
+        ),
+        Quiz(
+            question: "A–C–E starts with a small 3rd. Is it major or minor?",
+            choices: ["Major", "Minor"],
+            answer: 1,
+        ),
+        Explain(
+            text: "In C, four chords cover a huge share of pop: C (I), G (V), Am (vi) and F (IV).",
+            show: Keys((from: "F2", to: "G3", marks: [("C3", "C"), ("G2", "G"), ("A2", "Am"), ("F2", "F")])),
+        ),
+        Find(
+            prompt: "Find A minor: A, C and E.",
+            keys: ["A2", "C3", "E3"],
+        ),
+        Play(
+            prompt: "The loop, left hand: C, G, Am, F. Keep the hand low and close.",
+            lh: "C3+E3+G3/4@5+3+1 | G2+B2+D3/4@5+3+1 | A2+C3+E3/4@5+3+1 | F2+A2+C3/4@5+3+1",
+            beats_per_bar: 4,
+            hint: true,
+            bpm: 72,
+            tips: [
+                "Move between chords by the shortest way: the hand stays close to the keys.",
+                "Change chords exactly on beat one; the ear notices a late change at once.",
+            ],
+        ),
+        Play(
+            prompt: "Now a melody on top. Listen first, then play both hands.",
+            rh: "E4/2@3 G4@5 | D4/2@2 G4@5 | C4/2@1 E4@3 | C4/2@1 A4@5",
+            lh: "C3+E3+G3/4@5+3+1 | G2+B2+D3/4 | A2+C3+E3/4 | F2+A2+C3/4",
+            beats_per_bar: 4,
+            bpm: 72,
+            tips: [
+                "Melody louder, chords softer: this balance is what makes an arrangement sound professional.",
+                "Hands separately first, then together at 60%.",
+            ],
+        ),
+    ],
+)

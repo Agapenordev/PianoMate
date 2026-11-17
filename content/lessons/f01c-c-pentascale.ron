@@ -1,0 +1,87 @@
+(
+    id: "f01-c-pentascale",
+    title: "Steps, Skips and the C Pentascale",
+    summary: "2nds and 3rds, then five fingers on five notes in both hands.",
+    steps: [
+        Explain(
+            text: "A 2nd is a step: next key, next letter, next finger. A 3rd is a skip over one key.",
+            show: Keys((from: "C4", to: "G4", marks: [("C4", "C"), ("D4", "D"), ("E4", "E")], arcs: [("C4", "D4", "2nd"), ("C4", "E4", "3rd")])),
+        ),
+        Quiz(
+            question: "C up to E is a...",
+            show: Keys((from: "C4", to: "G4", marks: [("C4", "C"), ("E4", "E")])),
+            choices: ["2nd", "3rd", "4th"],
+            answer: 1,
+        ),
+        Play(
+            prompt: "Steps: C D E and back.",
+            rh: "C4/1@1 D4@2 E4@3 D4@2 C4/2@1",
+            hint: true,
+            names: true,
+            tips: [
+                "Curve the fingers as if holding a ball; play on the fingertips, not the flat pads.",
+                "Keep every finger resting on its key, ready, even when it is not playing.",
+                "Let each key come back up before the next goes down: one clear sound at a time.",
+            ],
+        ),
+        Play(
+            prompt: "Skips: C–E, D–F, E–G.",
+            rh: "C4/1@1 E4@3 D4@2 F4@4 E4@3 G4@5 C4/2@1",
+            names: true,
+            tips: [
+                "The finger in between stays on its key: it skips the key, not the hand.",
+                "Listen for the same loudness on both notes of each skip.",
+            ],
+        ),
+        Explain(
+            text: "Five fingers on five neighbouring keys: the C pentascale. Each finger owns one key.",
+            show: Keys((from: "C3", to: "G4", marks: [("C3", "5"), ("D3", "4"), ("E3", "3"), ("F3", "2"), ("G3", "1"), ("C4", "1"), ("D4", "2"), ("E4", "3"), ("F4", "4"), ("G4", "5")])),
+        ),
+        Play(
+            prompt: "Right hand, up and down.",
+            rh: "C4/1@1 D4@2 E4@3 F4@4 G4/2@5 F4/1@4 E4@3 D4@2 C4/3@1",
+            beats_per_bar: 4,
+            names: true,
+            tips: [
+                "Count steadily: 1, 2, 3, 4. The half note at the top lasts two counts.",
+                "The thumb plays on its side tip, not flat.",
+                "Fingers 4 and 5 are weaker: give them a little extra weight from the arm.",
+            ],
+        ),
+        Play(
+            prompt: "Left hand: thumb on G, walk down and back.",
+            lh: "G3/1@1 F3@2 E3@3 D3@4 C3/2@5 D3/1@4 E3@3 F3@2 G3/3@1",
+            beats_per_bar: 4,
+            names: true,
+            tips: [
+                "The left hand is usually weaker: play slower than feels necessary.",
+                "Same curved shape as the right hand; keep the wrist level, not drooping.",
+            ],
+        ),
+        Play(
+            prompt: "Hands take turns.",
+            rh: "r/2 C4/1@1 E4@3 | r/2 G4/2@5",
+            lh: "C3/1@5 E3@3 r/2 | G3/2@1 r/2",
+            beats_per_bar: 4,
+            names: true,
+            tips: [
+                "Rests are part of the music: keep counting through them.",
+                "Get the next hand ready while the other is still playing.",
+            ],
+        ),
+        Explain(
+            text: "Same shape, new place: that is transposing. Move the right thumb to G.",
+            show: Keys((from: "G4", to: "D5", marks: [("G4", "1"), ("A4", "2"), ("B4", "3"), ("C5", "4"), ("D5", "5")])),
+        ),
+        Play(
+            prompt: "The pentascale from G.",
+            rh: "G4/1@1 A4@2 B4@3 C5@4 D5/2@5 C5/1@4 B4@3 A4@2 G4/3@1",
+            beats_per_bar: 4,
+            names: true,
+            tips: [
+                "Same shape, new place: the fingers move exactly as in C.",
+                "Check the thumb lands on G before you start.",
+            ],
+        ),
+    ],
+)

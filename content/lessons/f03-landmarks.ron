@@ -1,0 +1,55 @@
+(
+    id: "f03-landmarks",
+    title: "Clef Landmarks: G and F",
+    summary: "Use the clefs themselves to find notes fast.",
+    steps: [
+        Explain(
+            text: "The treble clef curls around the G line. It is a fancy G.",
+            show: Staff(Treble, ["G4"]),
+        ),
+        Explain(
+            text: "The bass clef's two dots hug the F line. It is a fancy F.",
+            show: Staff(Bass, ["F3"]),
+        ),
+        Quiz(
+            question: "Name this note.",
+            show: Staff(Treble, ["G4"]),
+            choices: ["F", "G", "A"],
+            answer: 1,
+        ),
+        Quiz(
+            question: "Name this note.",
+            show: Staff(Bass, ["F3"]),
+            choices: ["E", "F", "G"],
+            answer: 1,
+        ),
+        Find(
+            prompt: "Find both landmarks: treble G and bass F.",
+            keys: ["G4", "F3"],
+            show: Music("G4/4", "F3/4"),
+        ),
+        Explain(
+            text: "From a landmark, count steps: one line or space up is one key up.",
+            show: Keys((from: "F3", to: "G4", marks: [("F3", "F"), ("G4", "G")], arcs: [("F3", "C4", "step up"), ("C4", "G4", "step up")])),
+        ),
+        Play(
+            prompt: "Landmark warm-up.",
+            rh: "C4/1@1 E4@3 G4/2@5 | r/4",
+            lh: "r/4 | C4/1@1 A3@3 F3/2@5",
+            beats_per_bar: 4,
+            tips: [
+                "Name each note aloud as you play it, using G and F as your anchors.",
+            ],
+        ),
+        Play(
+            prompt: "A tune across both hands.",
+            rh: "G4/1@5 F4@4 E4@3 D4@2 | C4/2@1 r/2 | r/4 | E4/1@3 F4@4 G4/2@5",
+            lh: "r/4 | r/2 B3/1@2 A3@3 | G3/1@4 F3@5 G3/2@4 | r/4",
+            beats_per_bar: 4,
+            tips: [
+                "Read by direction first (up or down, step or skip), then confirm the letter.",
+                "Keep the resting hand on its keys during its rests, ready.",
+            ],
+        ),
+    ],
+)

@@ -1,0 +1,51 @@
+(
+    id: "t06-octaves-leaps",
+    title: "Octaves and Leaps",
+    summary: "Octave melodies and the leaping bass-and-chord left hand behind big piano arrangements.",
+    steps: [
+        Explain(
+            text: "An octave spans eight white keys, thumb and little finger. Keep the hand's shape fixed and let the wrist carry it.",
+            show: Keys((from: "C4", to: "C5", marks: [("C4", "1"), ("C5", "5")], arcs: [("C4", "C5", "octave")])),
+        ),
+        Find(
+            prompt: "Press C and the C above it together: one octave.",
+            keys: ["C4", "C5"],
+        ),
+        Play(
+            prompt: "Ode to Joy in octaves. Bounce lightly from the wrist; the fingers stay still.",
+            rh: "E4+E5/1@1+5 E4+E5 F4+F5 G4+G5 | G4+G5 F4+F5 E4+E5 D4+D5 | C4+C5 C4+C5 D4+D5 E4+E5 | E4+E5/1.5 D4+D5/0.5 D4+D5/2",
+            beats_per_bar: 4,
+            bpm: 66,
+            tips: [
+                "Fix the 1-5 shape and let the forearm and wrist do the moving.",
+                "Play from close to the keys; no high lifts between octaves.",
+                "Release tension after every bar: the hand should never ache.",
+            ],
+        ),
+        Explain(
+            text: "Big arrangements fill the low end with a leap: a deep bass note, then a chord in the middle. Look at the landing spot before the hand moves.",
+            show: Keys((from: "C2", to: "C4", marks: [("C2", "bass"), ("E3", "chord"), ("G3", "chord"), ("C4", "chord")], arcs: [("C2", "E3", "leap")])),
+        ),
+        Play(
+            prompt: "Bass, chord, bass, chord on C and G. Travel in a low arc, close to the keys.",
+            lh: "C2/1@5 E3+G3+C4/1@3+2+1 G2@5 E3+G3+C4/1@3+2+1 | G1@5 D3+G3+B3/1@3+2+1 D2@5 D3+G3+B3/1@3+2+1",
+            beats_per_bar: 4,
+            bpm: 66,
+            tips: [
+                "Eyes move before the hand: look at the next landing spot early.",
+                "The bass note is deep and full, the chord light: like a waltz feel.",
+            ],
+        ),
+        Play(
+            prompt: "The same leap under a melody in octaves. Slow first.",
+            rh: "E4+E5/2@1+5 G4+G5/2 | D4+D5/2 G4+G5/2",
+            lh: "C2/1@5 E3+G3+C4/1@3+2+1 G2@5 E3+G3+C4/1@3+2+1 | G1@5 D3+G3+B3/1@3+2+1 D2@5 D3+G3+B3/1@3+2+1",
+            beats_per_bar: 4,
+            bpm: 60,
+            tips: [
+                "Practise the left-hand leaps alone until your eyes no longer need to watch them.",
+                "Octaves light from the wrist, bass deep and full.",
+            ],
+        ),
+    ],
+)

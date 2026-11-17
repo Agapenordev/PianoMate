@@ -1,0 +1,18 @@
+[package]
+name = "pianomate"
+edition.workspace = true
+version.workspace = true
+
+[dependencies]
+pianomate-core = { path = "../pianomate-core" }
+slint = "1.18"
+cpal = "0.18"
+midir = "0.11"
+rustysynth = "1.3"
+rtrb = "0.4"
+ron = "0.12"
+directories = "6"
+serde = { version = "1", features = ["derive"] }
+
+[build-dependencies]
+slint-build = "1.18"

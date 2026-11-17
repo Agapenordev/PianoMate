@@ -1,0 +1,52 @@
+(
+    id: "f15-g-scale",
+    title: "The G Major Scale",
+    summary: "A scale with one sharp, and the key signature that saves writing it.",
+    steps: [
+        Explain(
+            text: "Follow whole, whole, half, whole, whole, whole, half from G, and the 7th note must be F sharp.",
+            show: Keys((from: "G4", to: "G5", marks: [("G4", "G"), ("A4", "A"), ("B4", "B"), ("C5", "C"), ("D5", "D"), ("E5", "E"), ("F#5", "F♯"), ("G5", "G")], arcs: [("B4", "C5", "H"), ("F#5", "G5", "H")])),
+        ),
+        Explain(
+            text: "Instead of writing ♯ every time, a key signature puts one sharp on the top F line at the start. Every F is then F sharp.",
+            show: Music("key=1 G4/1 A4 B4 C5 | D5 E5 F#5 G5", ""),
+        ),
+        Quiz(
+            question: "In G major, which note is always sharp?",
+            choices: ["C", "F", "G"],
+            answer: 1,
+        ),
+        Explain(
+            text: "Fingering: 1 2 3, thumb under to C, then 1 2 3 4 5. The same move as the C scale.",
+            show: Keys((from: "G4", to: "G5", marks: [("G4", "1"), ("A4", "2"), ("B4", "3"), ("C5", "1"), ("D5", "2"), ("E5", "3"), ("F#5", "4"), ("G5", "5")], arcs: [("B4", "C5", "thumb under")])),
+        ),
+        Play(
+            prompt: "G major scale, up.",
+            rh: "key=1 G4/0.5@1 A4@2 B4@3 C5@1 D5@2 E5@3 F#5@4 G5/0.5@5",
+            beats_per_bar: 4,
+            hint: true,
+            tips: [
+                "The thumb tucks under after finger 3, onto C.",
+                "Finger 4 lands on F sharp: let the hand lean slightly into the black keys.",
+            ],
+        ),
+        Play(
+            prompt: "And down: 5 4 3 2 1, then third finger crosses over.",
+            rh: "key=1 G5/0.5@5 F#5@4 E5@3 D5@2 C5@1 B4@3 A4@2 G4/0.5@1",
+            beats_per_bar: 4,
+            tips: [
+                "Finger 3 crosses over the thumb onto B: a smooth glide, not a jump.",
+                "Keep the wrist level throughout.",
+            ],
+        ),
+        Play(
+            prompt: "Left hand, up: 5 4 3 2 1, third finger crosses over to E.",
+            lh: "key=1 G2/0.5@5 A2@4 B2@3 C3@2 D3@1 E3@3 F#3@2 G3/0.5@1",
+            beats_per_bar: 4,
+            tips: [
+                "The left hand crosses finger 3 over the thumb when going up: the mirror of the right.",
+                "Finger 2 takes F sharp near the top.",
+            ],
+        ),
+    ],
+)

@@ -1,0 +1,105 @@
+
+export struct KeyState {
+    note: int,
+    black: bool,
+    x: float, // white keys: left edge; black keys: centre. In white-key widths.
+    state: int, // 0 up, 1 down, 2 down and correct, 3 down and wrong
+    hint: bool, // marked as the key to look at
+    found: bool, // found in a find-the-keys step
+    region: bool, // part of the stretch a lesson diagram is showing
+    label: string, // note name, on C keys
+    kbd: string, // computer key that plays it
+}
+
+component PianoKey inherits Rectangle {
+    in property <KeyState> key;
+    in property <bool> show-kbd;
+    callback note(note: int, down: bool);
+
+    border-bottom-left-radius: key.black ? 3px : 5px;
+    border-bottom-right-radius: self.border-bottom-left-radius;
+    background: key.black
+        ? (key.state == 2 || key.found ? #2f7d55 : key.state == 3 ? #b4232a : key.state == 1 ? #a8731a : key.hint ? #7a5a1c : #1c1a17)
+        : (key.state == 2 || key.found ? #a8d5bc : key.state == 3 ? #ebb5b1 : key.state == 1 ? #e8d5a4 : key.hint ? #f6e8c2 : #fcfaf4);
+    animate background { duration: 90ms; }
+
+    TouchArea {
+        changed pressed => {
+            root.note(key.note, self.pressed);
+        }
+    }
+
+    if key.region: Rectangle {
+        y: 0;
+        height: 10px;
+        background: #d6a04a;
+    }
+
+    if key.hint: Rectangle {
+        x: (parent.width - self.width) / 2;
+        y: parent.height - (key.black ? 34px : 62px);
+        width: min(9px, parent.width - 4px);
+        height: self.width;
+        border-radius: self.width / 2;
+        background: key.black ? #e8c06a : #a8731a;
+    }
+    if root.show-kbd && key.kbd != "": Text {
+        y: parent.height - (key.black ? 20px : 40px);
+        width: parent.width;
+        horizontal-alignment: center;
+        text: key.kbd;
+        font-size: 11px;
+        font-weight: 600;
+        color: key.black ? #c9c2b4 : #1c1a17;
+    }
+    if key.label != "": Text {
+        y: parent.height - 19px;
+        width: parent.width;
+        horizontal-alignment: center;
+        text: key.label;
+        font-size: 9px;
+        color: key.note == 60 ? #a8731a : #a39b8c;
+        font-weight: key.note == 60 ? 800 : 400;
+    }
+}
+
+export component Keyboard inherits Rectangle {
+    in property <[KeyState]> keys;
+    in property <bool> show-kbd;
+    callback note(note: int, down: bool);
+
+    property <length> white-w: self.width / 52;
+    property <length> felt: 5px;
+
+    background: #1c1a17;
+    accessible-role: none;
+
+    // Two passes over one model so black keys always sit on top.
+    for key in root.keys: PianoKey {
+        visible: !key.black;
+        key: key;
+        show-kbd: root.show-kbd;
+        x: key.x * root.white-w + 0.5px;
+        y: root.felt;
+        width: root.white-w - 1px;
+        height: root.height - root.felt - 3px;
+        note(n, d) => { root.note(n, d); }
+    }
+    for key in root.keys: PianoKey {
+        visible: key.black;
+        key: key;
+        show-kbd: root.show-kbd;
+        x: key.x * root.white-w - self.width / 2;
+        y: root.felt;
+        width: root.white-w * 0.62;
+        height: (root.height - root.felt) * 0.62;
+        note(n, d) => { root.note(n, d); }
+    }
+
+    // The strip of red felt where keys meet the case.
+    Rectangle {
+        y: 0;
+        height: root.felt;
+        background: #7a1f24;
+    }
+}

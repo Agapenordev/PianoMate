@@ -1,0 +1,52 @@
+(
+    id: "t05-speed-ladder",
+    title: "The Speed Ladder",
+    summary: "How fast playing is really built: evenness first, then small steps up the metronome.",
+    steps: [
+        Explain(
+            text: "Speed is not forced, it is collected. Play a passage perfectly even and relaxed at a slow tempo, then raise it a little. Each rung must feel easy before the next.",
+            show: Figure("pulse"),
+        ),
+        Quiz(
+            question: "Your run stumbles at full speed. What helps most?",
+            choices: ["Play it fast many more times", "Drop the tempo until it is perfect, then climb", "Press harder"],
+            answer: 1,
+        ),
+        Play(
+            prompt: "Rung one: the Hanon pattern, even sixteenths. Use In time at 60%.",
+            rh: "C4/0.25@1 E4@2 F4@3 G4@4 A4@5 G4@4 F4@3 E4@2 D4@1 F4@2 G4@3 A4@4 B4@5 A4@4 G4@3 F4@2",
+            beats_per_bar: 2,
+            bpm: 60,
+            tips: [
+                "Even before fast: every sixteenth identical in length and loudness.",
+                "Breathe and stay loose; tension is what stops speed.",
+            ],
+        ),
+        Explain(
+            text: "Bursts: play a group of four as one quick gesture, then stop on the next note and breathe. Fingers learn the shape; the pause keeps them relaxed.",
+        ),
+        Play(
+            prompt: "Bursts up the C scale: four quick notes, land, rest.",
+            rh: "C4/0.25@1 D4@2 E4@3 F4@1 G4/0.5@2 r/0.5 | G4/0.25@2 A4@3 B4@4 C5@5 r/1",
+            beats_per_bar: 2,
+            bpm: 66,
+            tips: [
+                "Each group of four is one quick gesture, then a full stop on the next note.",
+                "The pauses are where the hand relaxes: never skip them.",
+            ],
+        ),
+        Play(
+            prompt: "Now join them into one run, up and down, even all the way.",
+            rh: "C4/0.25@1 D4@2 E4@3 F4@1 G4@2 A4@3 B4@4 C5@5 B4@4 A4@3 G4@2 F4@1 E4@3 D4@2 C4/0.5@1",
+            beats_per_bar: 2,
+            bpm: 66,
+            tips: [
+                "Think of the bursts while playing the run: the fingers remember the groups.",
+                "Start at 60% in In time and climb only when it is perfectly even.",
+            ],
+        ),
+        Explain(
+            text: "The ladder: In time at 60%, then 80%, then 100%. Fail twice at a rung and step back down. Come back tomorrow; speed settles overnight.",
+        ),
+    ],
+)

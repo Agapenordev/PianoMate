@@ -1,0 +1,62 @@
+(
+    id: "rv3-treble-reading",
+    title: "Reading Review: The Treble Staff",
+    summary: "Spaces F-A-C-E and lines E-G-B-D-F, high on the staff.",
+    steps: [
+        Explain(
+            text: "Treble lines from the bottom: E, G, B, D, F. Spaces: F, A, C, E. Read each note, then find it.",
+            show: Staff(Treble, ["C5", "E5", "B4", "F5", "A4"]),
+        ),
+        Quiz(
+            question: "Name this note.",
+            show: Staff(Treble, ["C5"]),
+            choices: ["C", "D", "E"],
+            answer: 0,
+        ),
+        Quiz(
+            question: "Name this note.",
+            show: Staff(Treble, ["E5"]),
+            choices: ["C", "D", "E"],
+            answer: 2,
+        ),
+        Find(
+            prompt: "Now find it on your piano.",
+            keys: ["E5"],
+            show: Staff(Treble, ["E5"]),
+        ),
+        Quiz(
+            question: "Name this note.",
+            show: Staff(Treble, ["B4"]),
+            choices: ["D", "B", "C"],
+            answer: 1,
+        ),
+        Quiz(
+            question: "Name this note.",
+            show: Staff(Treble, ["F5"]),
+            choices: ["F", "C", "D"],
+            answer: 0,
+        ),
+        Find(
+            prompt: "Now find it on your piano.",
+            keys: ["F5"],
+            show: Staff(Treble, ["F5"]),
+        ),
+        Quiz(
+            question: "Name this note.",
+            show: Staff(Treble, ["A4"]),
+            choices: ["C", "D", "A"],
+            answer: 2,
+        ),
+        Quiz(
+            question: "Name this note.",
+            show: Staff(Treble, ["D5"]),
+            choices: ["E", "D", "C"],
+            answer: 1,
+        ),
+        Find(
+            prompt: "Now find it on your piano.",
+            keys: ["D5"],
+            show: Staff(Treble, ["D5"]),
+        ),
+    ],
+)

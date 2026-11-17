@@ -1,0 +1,279 @@
+// Practice screens: note reading and ear training, each a round of questions then results.
+import { Theme } from "theme.slint";
+import { Btn, ProgressBar, Card, Back } from "widgets.slint";
+import { Staff, StaffItem } from "staff.slint";
+import { Choice, ChoiceBtn } from "lesson.slint";
+
+export struct DrillState {
+    title: string,
+    level: string,
+    count: int, // questions answered
+    total: int,
+    correct: int,
+    prompt: string,
+    feedback: string,
+    feedback-good: bool,
+    finished: bool,
+    // Results, once finished
+    score: string,
+    detail: string,
+    advice: string,
+}
+
+component Header inherits HorizontalLayout {
+    in property <DrillState> state;
+    callback leave;
+
+    height: 30px;
+    Back {
+        width: 120px;
+        text: "Leave practice";
+        clicked => { root.leave(); }
+    }
+    Text {
+        horizontal-stretch: 1;
+        text: "\{state.title} · \{state.level}";
+        font-family: Theme.serif;
+        font-italic: true;
+        font-size: 19px;
+        color: Theme.ink;
+        horizontal-alignment: center;
+        vertical-alignment: center;
+        overflow: elide;
+    }
+    Text {
+        width: 120px;
+        text: state.finished ? "Done" : "\{min(state.count + 1, state.total)} of \{state.total}";
+        font-size: 13px;
+        color: Theme.muted;
+        horizontal-alignment: right;
+        vertical-alignment: center;
+    }
+}
+
+component Results inherits Card {
+    in property <DrillState> state;
+    callback again;
+    callback leave;
+
+    width: 520px;
+    height: 300px;
+    VerticalLayout {
+        padding: 32px;
+        spacing: 8px;
+        alignment: center;
+        Text {
+            text: "Round complete";
+            font-size: 13px;
+            font-weight: 600;
+            color: Theme.brass;
+            horizontal-alignment: center;
+        }
+        Text {
+            text: state.score;
+            font-family: Theme.serif;
+            font-size: 56px;
+            color: Theme.ink;
+            horizontal-alignment: center;
+        }
+        Text {
+            text: state.detail;
+            font-size: 14px;
+            color: Theme.muted;
+            horizontal-alignment: center;
+            wrap: word-wrap;
+        }
+        Text {
+            text: state.advice;
+            font-family: Theme.serif;
+            font-size: 18px;
+            color: Theme.ink;
+            horizontal-alignment: center;
+            wrap: word-wrap;
+        }
+        Rectangle { height: 10px; }
+        HorizontalLayout {
+            alignment: center;
+            spacing: 12px;
+            Btn {
+                primary: false;
+                text: "Done";
+                clicked => { root.leave(); }
+            }
+            Btn {
+                text: "Another round";
+                clicked => { root.again(); }
+            }
+        }
+    }
+}
+
+export component NoteDrill inherits Rectangle {
+    in property <DrillState> state;
+    in property <[StaffItem]> staff;
+    in property <float> staff-spaces;
+    in property <float> staff-rows;
+    in property <[int]> marks;
+    callback leave;
+    callback again;
+
+    VerticalLayout {
+        padding: 28px;
+        padding-bottom: 20px;
+        Header {
+            state: root.state;
+            leave => { root.leave(); }
+        }
+        Rectangle { height: 14px; }
+        ProgressBar {
+            height: 4px;
+            value: root.state.count / max(1, root.state.total);
+        }
+        if !root.state.finished: VerticalLayout {
+            vertical-stretch: 1;
+            alignment: center;
+            spacing: 6px;
+            Text {
+                text: root.state.prompt;
+                font-family: Theme.serif;
+                font-size: 26px;
+                color: Theme.ink;
+                horizontal-alignment: center;
+            }
+            HorizontalLayout {
+                alignment: center;
+                Staff {
+                    items: root.staff;
+                    spaces: root.staff-spaces;
+                    rows: root.staff-rows;
+                    marks: root.marks;
+                    space: 21px;
+                }
+            }
+            Text {
+                height: 30px;
+                text: root.state.feedback;
+                font-size: 16px;
+                font-weight: 600;
+                color: root.state.feedback-good ? Theme.good : Theme.bad;
+                horizontal-alignment: center;
+            }
+            Text {
+                text: "\{root.state.correct} right first time";
+                font-size: 12px;
+                color: Theme.muted;
+                horizontal-alignment: center;
+            }
+        }
+        if root.state.finished: VerticalLayout {
+            vertical-stretch: 1;
+            alignment: center;
+            HorizontalLayout {
+                alignment: center;
+                Results {
+                    state: root.state;
+                    again => { root.again(); }
+                    leave => { root.leave(); }
+                }
+            }
+        }
+    }
+}
+
+export component EarDrill inherits Rectangle {
+    in property <DrillState> state;
+    in property <[Choice]> choices;
+    callback leave;
+    callback again;
+    callback replay;
+    callback choose(index: int);
+
+    VerticalLayout {
+        padding: 28px;
+        padding-bottom: 20px;
+        Header {
+            state: root.state;
+            leave => { root.leave(); }
+        }
+        Rectangle { height: 14px; }
+        ProgressBar {
+            height: 4px;
+            value: root.state.count / max(1, root.state.total);
+        }
+        if !root.state.finished: VerticalLayout {
+            vertical-stretch: 1;
+            alignment: center;
+            spacing: 22px;
+            Text {
+                text: root.state.prompt;
+                font-family: Theme.serif;
+                font-size: 26px;
+                color: Theme.ink;
+                horizontal-alignment: center;
+            }
+            HorizontalLayout {
+                alignment: center;
+                Rectangle {
+                    width: 96px;
+                    height: 96px;
+                    border-radius: 48px;
+                    background: play.has-hover ? Theme.brass : Theme.ink;
+                    animate background { duration: 120ms; }
+                    accessible-role: button;
+                    accessible-label: "Play the interval again";
+                    accessible-action-default => { root.replay(); }
+                    Path {
+                        x: (parent.width - self.width) / 2 + 4px;
+                        y: (parent.height - self.height) / 2;
+                        width: 28px;
+                        height: 32px;
+                        viewbox-width: 28;
+                        viewbox-height: 32;
+                        commands: "M 0 0 L 28 16 L 0 32 Z";
+                        fill: play.has-hover ? #ffffff : Theme.on-ink;
+                    }
+                    play := TouchArea {
+                        mouse-cursor: pointer;
+                        clicked => { root.replay(); }
+                    }
+                }
+            }
+            Text {
+                text: "Listen, then pick its size. Press Space to hear it again.";
+                font-size: 13px;
+                color: Theme.muted;
+                horizontal-alignment: center;
+            }
+            HorizontalLayout {
+                alignment: center;
+                spacing: 10px;
+                for choice[i] in root.choices: ChoiceBtn {
+                    min-width: 96px;
+                    choice: choice;
+                    index: i;
+                    clicked => { root.choose(i); }
+                }
+            }
+            Text {
+                height: 30px;
+                text: root.state.feedback;
+                font-size: 16px;
+                font-weight: 600;
+                color: root.state.feedback-good ? Theme.good : Theme.bad;
+                horizontal-alignment: center;
+            }
+        }
+        if root.state.finished: VerticalLayout {
+            vertical-stretch: 1;
+            alignment: center;
+            HorizontalLayout {
+                alignment: center;
+                Results {
+                    state: root.state;
+                    again => { root.again(); }
+                    leave => { root.leave(); }
+                }
+            }
+        }
+    }
+}

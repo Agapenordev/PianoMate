@@ -1,0 +1,42 @@
+(
+    id: "b04-keeping-the-beat",
+    title: "Keeping the Beat",
+    summary: "Feel the pulse and tap quarter, half and eighth notes in time.",
+    steps: [
+        Explain(
+            text: "Music moves over a steady pulse called the beat. In a moment you will hear a click on every beat, with a higher click at the start of each group of four.",
+        ),
+        Explain(
+            text: "A quarter note lasts exactly one beat. You get four clicks to count you in, then tap any key on each click. If the timing ever feels unfair, run Calibrate timing from Setup.",
+        ),
+        PlayRhythm(
+            prompt: "Four quarter notes: one tap on every click.",
+            bpm: 72,
+            beats_per_bar: 4,
+            beats: [1.0, 1.0, 1.0, 1.0],
+        ),
+        Explain(
+            text: "A half note has a hollow head and lasts two beats. Tap it once, then let the next click go by before you tap again.",
+        ),
+        PlayRhythm(
+            prompt: "Quarter, quarter, half. Count one, two, three (four) in each bar.",
+            bpm: 72,
+            beats_per_bar: 4,
+            beats: [1.0, 1.0, 2.0, 1.0, 1.0, 2.0],
+        ),
+        Quiz(
+            question: "How many beats does a half note last?",
+            choices: ["One", "Two", "Four"],
+            answer: 1,
+        ),
+        Explain(
+            text: "An eighth note has a flag on its stem and lasts half a beat, so two of them fit inside one click. Say one-and for the pair.",
+        ),
+        PlayRhythm(
+            prompt: "Quarter, two eighths, quarter, quarter.",
+            bpm: 66,
+            beats_per_bar: 4,
+            beats: [1.0, 0.5, 0.5, 1.0, 1.0],
+        ),
+    ],
+)

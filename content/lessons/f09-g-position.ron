@@ -1,0 +1,53 @@
+(
+    id: "f09-g-position",
+    title: "G Position and the G Chord",
+    summary: "A new home for both hands, the G chord, and Gsus4.",
+    steps: [
+        Explain(
+            text: "G position: right thumb on the G above Middle C, left little finger on the G an octave below.",
+            show: Keys((from: "G2", to: "D5", marks: [("G2", "5"), ("A2", "4"), ("B2", "3"), ("C3", "2"), ("D3", "1"), ("G4", "1"), ("A4", "2"), ("B4", "3"), ("C5", "4"), ("D5", "5")])),
+        ),
+        Find(
+            prompt: "Put both hands in G position: find both Gs.",
+            keys: ["G2", "G4"],
+        ),
+        Play(
+            prompt: "G pentascale, right hand.",
+            rh: "G4/1@1 A4@2 B4@3 C5@4 | D5/2@5 B4/1@3 G4@1",
+            beats_per_bar: 4,
+            names: true,
+            tips: [
+                "Thumb on G, then each finger on the next white key.",
+                "Same evenness as the C pentascale: every note the same size.",
+            ],
+        ),
+        Explain(
+            text: "G, B and D: the G chord. Two 3rds, like every major chord so far.",
+            show: Keys((from: "G2", to: "D3", marks: [("G2", "5"), ("B2", "3"), ("D3", "1")], arcs: [("G2", "B2", "3rd"), ("B2", "D3", "3rd")])),
+        ),
+        Explain(
+            text: "Replace B with C and the chord leans: Gsus4. Let C fall back to B.",
+            show: Keys((from: "G2", to: "D3", marks: [("G2", "G"), ("C3", "C"), ("D3", "D"), ("B2", "B")], arcs: [("C3", "B2", "resolves")])),
+        ),
+        Play(
+            prompt: "G, Gsus4, G.",
+            lh: "G2+B2+D3/2@5+3+1 G2+C3+D3/2@5+2+1 | G2+B2+D3/4@5+3+1",
+            beats_per_bar: 4,
+            hint: true,
+            tips: [
+                "Only finger 2 moves, from B up to C and back.",
+                "Make the sus chord lean, then let the G chord settle softer.",
+            ],
+        ),
+        Play(
+            prompt: "Lightly Row, a folk song, over the G chord.",
+            rh: "D5/1@5 B4@3 B4/2 | C5/1@4 A4@2 A4/2 | G4/1@1 A4@2 B4@3 C5@4 | D5/1@5 D5 D5/2",
+            lh: "G2+B2+D3/4@5+3+1 | r/4 | G2+B2+D3/4 | r/4",
+            beats_per_bar: 4,
+            tips: [
+                "The left hand holds each chord for the whole bar while the right hand moves.",
+                "Repeated notes like B B use the same finger: let the key rise between them.",
+            ],
+        ),
+    ],
+)

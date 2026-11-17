@@ -1,0 +1,50 @@
+(
+    id: "f07-face",
+    title: "F-A-C-E and the F Chord",
+    summary: "Four spaces spell a word, plus the F chord and a cross-hand arpeggio.",
+    steps: [
+        Explain(
+            text: "The treble spaces, bottom to top, spell FACE.",
+            show: Music("F4/4@1 A4@2 C5@3 E5@5", ""),
+        ),
+        Quiz(
+            question: "Name the note in the third space.",
+            show: Staff(Treble, ["C5"]),
+            choices: ["A", "C", "E"],
+            answer: 1,
+        ),
+        Find(
+            prompt: "Find F, A, C and E.",
+            keys: ["F4", "A4", "C5", "E5"],
+            show: Staff(Treble, ["F4", "A4", "C5", "E5"]),
+        ),
+        Explain(
+            text: "F, A and C together: the F chord.",
+            show: Keys((from: "F3", to: "C4", marks: [("F3", "5"), ("A3", "3"), ("C4", "1")], arcs: [("F3", "A3", "3rd"), ("A3", "C4", "3rd")])),
+        ),
+        Play(
+            prompt: "C chord to F chord and back.",
+            lh: "C3+E3+G3/2@5+3+1 F3+A3+C4/2@5+3+1 | C3+E3+G3/4@5+3+1",
+            beats_per_bar: 4,
+            hint: true,
+            tips: [
+                "Move the whole hand as one unit; keep the chord shape while travelling.",
+                "Look at where the little finger lands first: the root leads.",
+            ],
+        ),
+        Explain(
+            text: "An arpeggio climbs a chord one note at a time, here across both hands.",
+            show: Keys((from: "C3", to: "G4", marks: [("C3", "L"), ("G3", "L"), ("C4", "R"), ("E4", "R"), ("G4", "R")], arcs: [("C3", "G3", "left"), ("C4", "G4", "right")])),
+        ),
+        Play(
+            prompt: "The arpeggio on C.",
+            rh: "r/2 C4/1@1 E4@3 | G4/4@5",
+            lh: "C3/1@5 G3@1 r/2 | r/4",
+            beats_per_bar: 4,
+            tips: [
+                "The left hand lets go just as the right hand plays: no gap, no overlap.",
+                "Keep counting through the rests at the end of each bar.",
+            ],
+        ),
+    ],
+)

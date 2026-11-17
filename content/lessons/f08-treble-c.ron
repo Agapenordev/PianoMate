@@ -1,0 +1,44 @@
+(
+    id: "f08-treble-c",
+    title: "Treble C Position",
+    summary: "The right hand moves up an octave and reads high on the staff.",
+    steps: [
+        Explain(
+            text: "Treble C position: right thumb on the C one octave above Middle C.",
+            show: Keys((from: "C4", to: "G5", marks: [("C4", "Middle C"), ("C5", "1"), ("D5", "2"), ("E5", "3"), ("F5", "4"), ("G5", "5")], arcs: [("C4", "C5", "octave")])),
+        ),
+        Find(
+            prompt: "Find Middle C, then the C an octave higher.",
+            keys: ["C4", "C5"],
+        ),
+        Play(
+            prompt: "Up and down.",
+            rh: "C5/1@1 D5@2 E5@3 F5@4 | G5/2@5 E5/1@3 C5@1",
+            beats_per_bar: 4,
+            names: true,
+            tips: [
+                "Move the whole hand up an octave before starting; the shape stays the same.",
+                "Name the notes aloud once: C, D, E, F, G.",
+            ],
+        ),
+        Play(
+            prompt: "Imitation: the left hand echoes the right.",
+            rh: "C5/1@1 E5@3 G5/2@5 | r/4",
+            lh: "r/4 | C3/1@5 E3@3 G3/2@1",
+            beats_per_bar: 4,
+            tips: [
+                "The left hand copies the right exactly: same shape, same rhythm, lower down.",
+                "Make the two hands sound like a question and an answer.",
+            ],
+        ),
+        Play(
+            prompt: "When the Saints Go Marching In.",
+            rh: "r/1 C5/1@1 E5@3 F5@4 | G5/4@5 | r/1 C5/1@1 E5@3 F5@4 | G5/4@5 | r/1 C5/1@1 E5@3 F5@4 | G5/2@5 E5@3 | C5/2@1 E5@3 | D5/4@2",
+            beats_per_bar: 4,
+            tips: [
+                "Each phrase starts after one beat of rest: breathe on the rest.",
+                "The long Gs last four beats: count them all before moving on.",
+            ],
+        ),
+    ],
+)

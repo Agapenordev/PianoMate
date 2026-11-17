@@ -1,0 +1,371 @@
+import { Theme } from "theme.slint";
+import { Keyboard, KeyState } from "keyboard.slint";
+import { StaffItem } from "staff.slint";
+import { Choice, LessonView, Complete, Calibrate } from "lesson.slint";
+import { DrillState, NoteDrill, EarDrill } from "drill.slint";
+import { Card, GoalCard, StageCard, BookCard, NextUp, PlanItem, DayBar, Stat, Sidebar, Today, Road, StagePage, Practice, Library, Setup, Onboarding } from "shell.slint";
+import { DiagramKey, DiagramArc } from "figures.slint";
+
+export { Theme }
+
+export component App inherits Window {
+    // Keyboard
+    in property <[KeyState]> keys;
+    in property <bool> show-kbd;
+    in property <bool> midi-connected;
+    in property <string> device;
+    in property <string> audio-info;
+    // Screens: 0 shell (sidebar and pages), 1 lesson, 2 lesson complete, 3 timing calibration,
+    // 4 goal picker, 5 note-reading round, 6 ear-training round
+    in property <int> screen;
+    // Shell pages: 0 today, 1 road, 2 library, 3 setup, 4 one stage, 5 practice
+    in property <int> page;
+    in property <[GoalCard]> goals;
+    in property <GoalCard> goal;
+    in property <float> progress;
+    in property <string> progress-text;
+    in property <string> progress-short;
+    in property <string> streak;
+    in property <string> greeting;
+    in property <NextUp> next-up;
+    in property <[Stat]> stats;
+    in property <[PlanItem]> plan;
+    in property <[DayBar]> week;
+    in property <string> week-total;
+    in property <[StageCard]> part-stages;
+    in property <string> road-title;
+    in property <string> road-line;
+    in property <[StageCard]> stages;
+    in property <StageCard> stage;
+    in property <string> stage-kicker;
+    in property <[Card]> cards;
+    in property <[BookCard]> books;
+    in property <Card> calibration;
+    in property <bool> names;
+    // Practice
+    in property <[string]> reading-levels;
+    in property <int> reading-level;
+    in property <[Stat]> reading-stats;
+    in property <[Stat]> weak-notes;
+    in property <[string]> ear-levels;
+    in property <int> ear-level;
+    in property <[Stat]> ear-stats;
+    in property <image> reading-art;
+    in property <image> ear-art;
+    in property <DrillState> drill;
+    // Current lesson step
+    in property <string> lesson-title;
+    in property <string> lesson-source;
+    in property <int> step;
+    in property <int> step-count;
+    in property <int> kind;
+    in property <string> body;
+    in property <[StaffItem]> staff;
+    in property <string> figure;
+    in property <[DiagramKey]> diagram-keys;
+    in property <[DiagramArc]> diagram-arcs;
+    in property <float> diagram-whites;
+    in property <int> diagram-rows;
+    in property <[bool]> hands-lit;
+    in property <float> staff-spaces;
+    in property <float> staff-rows;
+    in property <[int]> marks;
+    in property <float> playhead: -1;
+    in property <[Choice]> choices;
+    in property <bool> can-continue;
+    in property <string> action;
+    in property <string> feedback;
+    in property <bool> feedback-good;
+    in property <bool> has-next;
+    in property <int> calibration-taps;
+    in property <string> calibration-result;
+
+    callback note(note: int, down: bool); // on-screen key pressed or released: make sound
+    callback key-played(note: int, down: bool, at-ms: int); // any key, from any source: light it and grade it
+    callback typed(text: string, down: bool);
+    callback navigate(page: int);
+    callback pick-goal(index: int);
+    callback change-goal();
+    callback open-stage(index: int);
+    callback open-part-stage(index: int);
+    callback open-lesson(index: int); // within the open stage
+    callback plan-item(kind: int);
+    callback calibrate();
+    callback set-theme(mode: int);
+    callback toggle-names();
+    callback toggle-echo();
+    callback toggle-piano();
+    in property <bool> show-piano; // the on-screen keyboard along the bottom
+    in property <bool> echo-midi;
+    callback pick-reading-level(index: int);
+    callback pick-ear-level(index: int);
+    callback start-reading();
+    callback start-sight();
+    callback start-chords();
+    callback metronome-toggle();
+    callback metronome-bpm-by(delta: int);
+    callback metronome-beats-set(beats: int);
+    in property <bool> metronome-on;
+    in property <int> metronome-bpm;
+    in property <int> metronome-beats;
+    in property <int> lesson-stars;
+    in property <string> star-hint;
+    callback pick-chord-level(index: int);
+    in property <[string]> chord-levels;
+    in property <int> chord-level;
+    in property <[Stat]> chord-stats;
+    in property <image> chord-art;
+    callback start-rhythm-reading();
+    callback pick-sight-level(index: int);
+    callback pick-rhythm-level(index: int);
+    in property <[string]> sight-levels;
+    in property <int> sight-level;
+    in property <[Stat]> sight-stats;
+    in property <[string]> rhythm-levels;
+    in property <int> rhythm-level;
+    in property <[Stat]> rhythm-stats;
+    in property <image> sight-art;
+    in property <image> rhythm-art;
+    callback start-ear();
+    callback replay(); // Space: hear the interval or the passage again
+    callback listen(); // play the current passage for the learner to hear
+    callback set-mode(mode: int); // 0 at my pace, 1 in time
+    callback set-tempo(percent: int);
+    in property <bool> in-time;
+    in property <int> tempo: 100;
+    callback listen-tick(generation: int, event: int, on: bool); // a scheduled note of that playback
+    in property <bool> entered: true; // the current lesson step has faded in
+    callback previous(); // back one lesson step
+    callback retry(); // start the current step, or the finished lesson, again
+    in property <[DiagramKey]> side-keys;
+    in property <float> side-whites;
+    in property <[string]> side-hands;
+    in property <[string]> side-facts;
+    in property <[string]> side-tips;
+    callback home(); // leave the lesson, drill or calibration
+    callback next(); // Enter / the main button
+    callback choose(index: int);
+
+    title: "PianoMate";
+    background: Theme.paper;
+    preferred-width: 1280px;
+    preferred-height: 900px;
+    min-width: 900px;
+    min-height: 700px;
+    forward-focus: scope;
+
+    scope := FocusScope {
+        key-pressed(event) => {
+            if (event.repeat) {
+                return accept;
+            }
+            if (event.text == Key.Return) {
+                root.next();
+            } else if (event.text == Key.Escape) {
+                root.home();
+            } else if (event.text == Key.LeftArrow && root.screen == 1) {
+                root.previous();
+            } else if ((event.text == "r" || event.text == "R") && event.modifiers.control) {
+                root.retry();
+            } else {
+                root.typed(event.text, true);
+            }
+            accept
+        }
+        key-released(event) => {
+            root.typed(event.text, false);
+            accept
+        }
+
+        VerticalLayout {
+            HorizontalLayout {
+                vertical-stretch: 1;
+                if root.screen == 0: Sidebar {
+                    page: root.page;
+                    goal-title: root.goal.title;
+                    progress: root.progress;
+                    progress-text: root.progress-short;
+                    streak: root.streak;
+                    midi-connected: root.midi-connected;
+                    device: root.device;
+                    navigate(p) => { root.navigate(p); }
+                }
+                Rectangle {
+                    horizontal-stretch: 1;
+                    if root.screen == 0 && root.page == 0: Today {
+                        greeting: root.greeting;
+                        goal: root.goal;
+                        progress: root.progress;
+                        progress-text: root.progress-text;
+                        next-up: root.next-up;
+                        stats: root.stats;
+                        plan: root.plan;
+                        week: root.week;
+                        week-total: root.week-total;
+                        stages: root.part-stages;
+                        road-title: root.road-title;
+                        road-line: root.road-line;
+                        continue => { root.next(); }
+                        plan-item(k) => { root.plan-item(k); }
+                        open-stage(i) => { root.open-part-stage(i); }
+                        see-road => { root.navigate(1); }
+                    }
+                    if root.screen == 0 && root.page == 1: Road {
+                        goal: root.goal;
+                        stages: root.stages;
+                        open-stage(i) => { root.open-stage(i); }
+                    }
+                    if root.screen == 0 && root.page == 4: StagePage {
+                        stage: root.stage;
+                        position: root.stage-kicker;
+                        lessons: root.cards;
+                        back => { root.navigate(1); }
+                        open-lesson(i) => { root.open-lesson(i); }
+                    }
+                    if root.screen == 0 && root.page == 5: Practice {
+                        reading-levels: root.reading-levels;
+                        reading-level: root.reading-level;
+                        reading-stats: root.reading-stats;
+                        weak-notes: root.weak-notes;
+                        ear-levels: root.ear-levels;
+                        ear-level: root.ear-level;
+                        ear-stats: root.ear-stats;
+                        reading-art: root.reading-art;
+                        ear-art: root.ear-art;
+                        pick-reading-level(i) => { root.pick-reading-level(i); }
+                        pick-ear-level(i) => { root.pick-ear-level(i); }
+                        start-reading => { root.start-reading(); }
+                        start-ear => { root.start-ear(); }
+                        sight-levels: root.sight-levels;
+                        sight-level: root.sight-level;
+                        sight-stats: root.sight-stats;
+                        rhythm-levels: root.rhythm-levels;
+                        rhythm-level: root.rhythm-level;
+                        rhythm-stats: root.rhythm-stats;
+                        sight-art: root.sight-art;
+                        rhythm-art: root.rhythm-art;
+                        pick-sight-level(i) => { root.pick-sight-level(i); }
+                        pick-rhythm-level(i) => { root.pick-rhythm-level(i); }
+                        start-sight => { root.start-sight(); }
+                        start-rhythm-reading => { root.start-rhythm-reading(); }
+                        chord-levels: root.chord-levels;
+                        chord-level: root.chord-level;
+                        chord-stats: root.chord-stats;
+                        chord-art: root.chord-art;
+                        pick-chord-level(i) => { root.pick-chord-level(i); }
+                        start-chords => { root.start-chords(); }
+                        metronome-on: root.metronome-on;
+                        metronome-bpm: root.metronome-bpm;
+                        metronome-beats: root.metronome-beats;
+                        metronome-toggle => { root.metronome-toggle(); }
+                        metronome-bpm-by(d) => { root.metronome-bpm-by(d); }
+                        metronome-beats-set(n) => { root.metronome-beats-set(n); }
+                    }
+                    if root.screen == 0 && root.page == 2: Library {
+                        books: root.books;
+                    }
+                    if root.screen == 0 && root.page == 3: Setup {
+                        calibration: root.calibration;
+                        goal: root.goal;
+                        device: root.device;
+                        audio: root.audio-info;
+                        theme-mode: Theme.mode;
+                        names: root.names;
+                        calibrate => { root.calibrate(); }
+                        change-goal => { root.change-goal(); }
+                        set-theme(m) => { root.set-theme(m); }
+                        toggle-names => { root.toggle-names(); }
+                        echo-midi: root.echo-midi;
+                        midi-connected: root.midi-connected;
+                        toggle-echo => { root.toggle-echo(); }
+                        show-piano: root.show-piano;
+                        toggle-piano => { root.toggle-piano(); }
+                    }
+                    if root.screen == 1: LessonView {
+                        show-piano: root.show-piano;
+                        title: root.lesson-title;
+                        source: root.lesson-source;
+                        step: root.step;
+                        step-count: root.step-count;
+                        kind: root.kind;
+                        body: root.body;
+                        staff: root.staff;
+                        staff-spaces: root.staff-spaces;
+                        staff-rows: root.staff-rows;
+                        figure: root.figure;
+                        diagram-keys: root.diagram-keys;
+                        diagram-arcs: root.diagram-arcs;
+                        diagram-whites: root.diagram-whites;
+                        diagram-rows: root.diagram-rows;
+                        hands-lit: root.hands-lit;
+                        marks: root.marks;
+                        playhead: root.playhead;
+                        choices: root.choices;
+                        can-continue: root.can-continue;
+                        action: root.action;
+                        entered: root.entered;
+                        side-keys: root.side-keys;
+                        side-whites: root.side-whites;
+                        side-hands: root.side-hands;
+                        side-facts: root.side-facts;
+                        side-tips: root.side-tips;
+                        previous => { root.previous(); }
+                        retry => { root.retry(); }
+                        listen => { root.listen(); }
+                        in-time: root.in-time;
+                        tempo: root.tempo;
+                        set-mode(m) => { root.set-mode(m); }
+                        set-tempo(p) => { root.set-tempo(p); }
+                        feedback: root.feedback;
+                        feedback-good: root.feedback-good;
+                        home => { root.home(); }
+                        next => { root.next(); }
+                        choose(i) => { root.choose(i); }
+                    }
+                    if root.screen == 2: Complete {
+                        title: root.lesson-title;
+                        stars: root.lesson-stars;
+                        star-hint: root.star-hint;
+                        has-next: root.has-next;
+                        home => { root.home(); }
+                        next => { root.next(); }
+                        retry => { root.retry(); }
+                    }
+                    if root.screen == 3: Calibrate {
+                        taps: root.calibration-taps;
+                        result: root.calibration-result;
+                        home => { root.home(); }
+                        restart => { root.calibrate(); }
+                    }
+                    if root.screen == 4: Onboarding {
+                        goals: root.goals;
+                        pick(i) => { root.pick-goal(i); }
+                    }
+                    if root.screen == 5: NoteDrill {
+                        state: root.drill;
+                        staff: root.staff;
+                        staff-spaces: root.staff-spaces;
+                        staff-rows: root.staff-rows;
+                        marks: root.marks;
+                        leave => { root.home(); }
+                        again => { root.start-reading(); }
+                    }
+                    if root.screen == 6: EarDrill {
+                        state: root.drill;
+                        choices: root.choices;
+                        leave => { root.home(); }
+                        again => { root.start-ear(); }
+                        replay => { root.replay(); }
+                        choose(i) => { root.choose(i); }
+                    }
+                }
+            }
+            if root.show-piano: Keyboard {
+                height: 150px;
+                keys: root.keys;
+                show-kbd: root.show-kbd;
+                note(n, d) => { root.note(n, d); }
+            }
+        }
+    }
+}

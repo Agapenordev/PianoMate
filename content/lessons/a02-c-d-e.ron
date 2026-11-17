@@ -1,0 +1,44 @@
+(
+    id: "b02-c-d-e",
+    title: "Three Notes: C, D, E",
+    summary: "Step up from Middle C and read your first notes on the staff.",
+    steps: [
+        Explain(
+            text: "The white keys are named with the letters A to G. Stepping right from Middle C you reach D, then E.",
+            show: Keyboard(["C4", "D4", "E4"]),
+        ),
+        Explain(
+            text: "The staff climbs the same way, one step at a time: line, space, line. D sits in the space under the bottom line, and E sits on the bottom line.",
+            show: Staff(Treble, ["C4", "D4", "E4"]),
+        ),
+        Quiz(
+            question: "Which note is this?",
+            show: Staff(Treble, ["E4"]),
+            choices: ["C", "D", "E"],
+            answer: 2,
+        ),
+        Quiz(
+            question: "And this one?",
+            show: Staff(Treble, ["D4"]),
+            choices: ["C", "D", "E"],
+            answer: 1,
+        ),
+        Play(
+            prompt: "Play C, D, E going up. The marked key leads the way.",
+            rh: "C4/1 D4 E4",
+            hint: true,
+            tips: [
+                "Fingers 1, 2, 3 on C, D, E: each finger stays on its own key.",
+                "Look at the staff, not your hands, as much as you can.",
+            ],
+        ),
+        Play(
+            prompt: "Read this tune from the staff. Take your time; only the notes matter for now.",
+            rh: "E4/1 D4 C4 D4 E4 E4 E4/2",
+            tips: [
+                "Read by direction first: up, down or the same, then confirm the note.",
+                "The last note is a half note: hold it for two counts.",
+            ],
+        ),
+    ],
+)

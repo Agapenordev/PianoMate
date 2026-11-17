@@ -1,0 +1,44 @@
+(
+    id: "f14-primary-c",
+    title: "I, IV and V7 in C",
+    summary: "Three chords behind countless songs, and how to read them from a lead sheet.",
+    steps: [
+        Explain(
+            text: "Number the notes of the C scale 1 to 7 (in Roman numerals). Chords built on I, IV and V are the primary chords: C, F and G7.",
+            show: Keys((from: "C4", to: "B4", marks: [("C4", "I"), ("D4", "ii"), ("E4", "iii"), ("F4", "IV"), ("G4", "V"), ("A4", "vi"), ("B4", "vii")])),
+        ),
+        Explain(
+            text: "To keep the hand still, play IV as C-F-A: the F chord with C moved to the bottom. That is an inversion.",
+            show: Keys((from: "B2", to: "A3", marks: [("C3", "5"), ("F3", "2"), ("A3", "1")], arcs: [("C3", "A3", "IV: F chord")])),
+        ),
+        Play(
+            prompt: "I, IV, I, V7, I. The thumb or second finger leads each change.",
+            lh: "C3+E3+G3/2@5+3+1 C3+F3+A3/2@5+2+1 | C3+E3+G3/2 B2+F3+G3/2@5+2+1 | C3+E3+G3/4",
+            beats_per_bar: 4,
+            hint: true,
+            tips: [
+                "Find the notes that stay the same between chords; those fingers do not move.",
+                "Change the hand shape during the last moment of the previous chord, not after.",
+            ],
+        ),
+        Quiz(
+            question: "In C major, the IV chord is built on...",
+            choices: ["E", "F", "G"],
+            answer: 1,
+        ),
+        Explain(
+            text: "A lead sheet gives the melody and chord names only. You choose how to play the chords.",
+            show: Music("E4/1 E4 E4/2 | F4/1 F4 F4 F4", "C3+E3+G3/4 | C3+F3+A3/4"),
+        ),
+        Play(
+            prompt: "Jingle Bells, whole chorus: C, then F, back to C, then G7.",
+            rh: "E4/1@3 E4 E4/2 | E4/1 E4 E4/2 | E4/1 G4@5 C4/1.5@1 D4/0.5@2 | E4/4@3 | F4/1@4 F4 F4/1.5 F4/0.5 | F4/1 E4 E4 E4/0.5 E4 | E4/1 D4@2 D4 E4@3 | D4/2@2 G4/2@5",
+            lh: "C3+E3+G3/4@5+3+1 | C3+E3+G3/4 | C3+E3+G3/4 | C3+E3+G3/4 | C3+F3+A3/4@5+2+1 | C3+E3+G3/4@5+3+1 | B2+F3+G3/4@5+2+1 | B2+F3+G3/4",
+            beats_per_bar: 4,
+            tips: [
+                "Practise the left hand's chord changes alone until they are automatic.",
+                "Then hands together at 60% in In time.",
+            ],
+        ),
+    ],
+)

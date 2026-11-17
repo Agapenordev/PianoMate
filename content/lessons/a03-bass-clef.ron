@@ -1,0 +1,51 @@
+(
+    id: "b03-bass-clef",
+    title: "The Left Hand and the Bass Clef",
+    summary: "Meet the lower staff and play the C below Middle C.",
+    steps: [
+        Explain(
+            text: "Lower notes are written on a second staff with a different sign at the start: the bass clef. Your left hand usually plays these.",
+            show: Staff(Bass, ["C3"]),
+        ),
+        Explain(
+            text: "That note was the next C to the left of Middle C. In the bass clef it sits in the second space from the bottom.",
+            show: Keyboard(["C3", "C4"]),
+        ),
+        Play(
+            prompt: "Play the lower C with your left hand.",
+            lh: "C3/4",
+            hint: true,
+            tips: [
+                "Left-hand finger 5, the little finger, plays this C in C position.",
+                "Keep the hand curved; the little finger plays on its tip, not lying flat.",
+            ],
+        ),
+        Explain(
+            text: "Middle C can be written in the bass clef too. Here it sits on a ledger line just above the staff. It is the same key, written two ways.",
+            show: Staff(Bass, ["C4"]),
+        ),
+        Quiz(
+            question: "Which key is this?",
+            show: Staff(Bass, ["C4"]),
+            choices: ["The C below Middle C", "Middle C", "E"],
+            answer: 1,
+        ),
+        Play(
+            prompt: "Step up from the lower C: C, D, E.",
+            lh: "C3/1 D3 E3",
+            hint: true,
+            tips: [
+                "Fingers 5, 4, 3 for C, D, E: the left hand counts from the little finger.",
+                "Go slowly: the left hand learns more slowly than the right, and that is normal.",
+            ],
+        ),
+        Play(
+            prompt: "Now read it yourself. The last note is held longer.",
+            lh: "C3/1 E3 D3 E3 C3/2",
+            tips: [
+                "The last note is longer: hold it for its full length.",
+                "Name each note in your head as you play it.",
+            ],
+        ),
+    ],
+)

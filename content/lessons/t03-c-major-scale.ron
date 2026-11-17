@@ -1,0 +1,59 @@
+(
+    id: "t03-c-major-scale",
+    title: "The C Major Scale",
+    summary: "Eight notes, five fingers: learn the thumb-under move that every fast run depends on.",
+    source: "Charles-Louis Hanon, The Virtuoso Pianist in 60 Exercises (1873), Part II: preparation for the scales and No. 39",
+    steps: [
+        Explain(
+            text: "A scale has eight notes but your hand has five fingers. The solution is the most important movement in piano technique: after finger 3, the thumb passes underneath the hand and takes the next note. Part II of Hanon's book is devoted to it.",
+        ),
+        Explain(
+            text: "Going up in the right hand: fingers 1 2 3 on C, D, E. Then the thumb slides under to F, and 1 2 3 4 5 carry you to the top C. Keep your wrist level as the thumb travels.",
+            show: Keyboard(["C4", "D4", "E4", "F4", "G4", "A4", "B4", "C5"]),
+        ),
+        Quiz(
+            question: "Going up the C major scale with the right hand, which finger plays F?",
+            choices: ["Finger 4", "The thumb, passed under", "Finger 5"],
+            answer: 1,
+        ),
+        Play(
+            prompt: "Up the scale. Fingers 1 2 3, thumb under, 1 2 3 4 5.",
+            rh: "C4/0.5@1 D4@2 E4@3 F4@1 G4@2 A4@3 B4@4 C5/1@5",
+            hint: true,
+            tips: [
+                "The thumb starts moving under as soon as finger 2 plays, not at the last moment.",
+                "Keep the wrist level: no elbow flapping out when the thumb passes.",
+            ],
+        ),
+        Explain(
+            text: "Coming down, the move reverses: 5 4 3 2 1 take you to F, then finger 3 crosses over the thumb to land on E, and 3 2 1 finish the scale.",
+        ),
+        Play(
+            prompt: "Down the scale. Fingers 5 4 3 2 1, third finger over, 3 2 1.",
+            rh: "C5/0.5@5 B4@4 A4@3 G4@2 F4@1 E4@3 D4@2 C4/1@1",
+            tips: [
+                "Finger 3 crosses over the thumb smoothly: the hand glides sideways, it does not jump.",
+            ],
+        ),
+        Play(
+            prompt: "Up and down in one breath, without stopping at the top.",
+            rh: "C4/0.5 D4 E4 F4 G4 A4 B4 C5 B4 A4 G4 F4 E4 D4 C4/1",
+            tips: [
+                "No pause at the top: the turn is just another note.",
+                "Keep the scale even through the thumb crossings in both directions.",
+            ],
+        ),
+        Explain(
+            text: "The left hand mirrors it. Going up it starts on the little finger: 5 4 3 2 1 reach G, then finger 3 crosses over to A, and 3 2 1 finish.",
+            show: Keyboard(["C3", "D3", "E3", "F3", "G3", "A3", "B3", "C4"]),
+        ),
+        Play(
+            prompt: "Left hand, up the scale. Fingers 5 4 3 2 1, third finger over, 3 2 1.",
+            lh: "C3/0.5@5 D3@4 E3@3 F3@2 G3@1 A3@3 B3@2 C4/1@1",
+            tips: [
+                "Going up, finger 3 crosses over the thumb onto A.",
+                "Elbow relaxed and slightly out, so the hand can travel.",
+            ],
+        ),
+    ],
+)

@@ -1,0 +1,62 @@
+(
+    id: "rv4-high-reading",
+    title: "Reading Review: Up High",
+    summary: "Read the treble C position and the ledger notes above the staff.",
+    steps: [
+        Explain(
+            text: "Above the top line comes G, then A on the first ledger line. Read each note, then find it.",
+            show: Staff(Treble, ["G5", "E5", "A5", "C5", "D5"]),
+        ),
+        Quiz(
+            question: "Name this note.",
+            show: Staff(Treble, ["G5"]),
+            choices: ["G", "C", "D"],
+            answer: 0,
+        ),
+        Quiz(
+            question: "Name this note.",
+            show: Staff(Treble, ["E5"]),
+            choices: ["C", "D", "E"],
+            answer: 2,
+        ),
+        Find(
+            prompt: "Now find it on your piano.",
+            keys: ["E5"],
+            show: Staff(Treble, ["E5"]),
+        ),
+        Quiz(
+            question: "Name this note.",
+            show: Staff(Treble, ["A5"]),
+            choices: ["D", "A", "C"],
+            answer: 1,
+        ),
+        Quiz(
+            question: "Name this note.",
+            show: Staff(Treble, ["C5"]),
+            choices: ["C", "D", "E"],
+            answer: 0,
+        ),
+        Find(
+            prompt: "Now find it on your piano.",
+            keys: ["C5"],
+            show: Staff(Treble, ["C5"]),
+        ),
+        Quiz(
+            question: "Name this note.",
+            show: Staff(Treble, ["D5"]),
+            choices: ["C", "E", "D"],
+            answer: 2,
+        ),
+        Quiz(
+            question: "Name this note.",
+            show: Staff(Treble, ["F5"]),
+            choices: ["D", "F", "C"],
+            answer: 1,
+        ),
+        Find(
+            prompt: "Now find it on your piano.",
+            keys: ["F5"],
+            show: Staff(Treble, ["F5"]),
+        ),
+    ],
+)

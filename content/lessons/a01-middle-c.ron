@@ -1,0 +1,41 @@
+(
+    id: "b01-middle-c",
+    title: "Finding Middle C",
+    summary: "Read the pattern of black keys and find your home note.",
+    steps: [
+        Explain(
+            text: "Look at the black keys. They come in groups of two and groups of three, repeating all the way along the keyboard.",
+            show: Keyboard(["C#4", "D#4", "F#4", "G#4", "A#4"]),
+        ),
+        Explain(
+            text: "The white key just to the left of any group of two black keys is called C. The C nearest the centre of the piano is Middle C.",
+            show: Keyboard(["C4"]),
+        ),
+        Play(
+            prompt: "Play Middle C. The marked key shows you where it is.",
+            rh: "C4/4",
+            hint: true,
+            tips: [
+                "Use finger 1, the thumb, playing on its side tip.",
+                "Let the key come all the way back up before the next press.",
+            ],
+        ),
+        Quiz(
+            question: "Which note sits just left of every group of two black keys?",
+            choices: ["A", "C", "F"],
+            answer: 1,
+        ),
+        Explain(
+            text: "On the staff, Middle C hangs just below the five lines, on a short line of its own called a ledger line.",
+            show: Staff(Treble, ["C4"]),
+        ),
+        Play(
+            prompt: "Now without the marker: play Middle C three times.",
+            rh: "C4/1 C4 C4",
+            tips: [
+                "Find it by its landmark first: the white key just left of the two black keys near the centre.",
+                "Three even presses, the same loudness each time.",
+            ],
+        ),
+    ],
+)

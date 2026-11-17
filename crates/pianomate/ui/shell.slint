@@ -1,0 +1,1604 @@
+// The main shell: sidebar, the pages it switches between, and the goal picker.
+import { Theme } from "theme.slint";
+import { Btn, Link, ProgressBar, Picture, Check, Card as Surface, CheckBox, Toggle, Chip, Page, PageTitle, SectionHead, Back } from "widgets.slint";
+
+export struct Card {
+    number: string,
+    title: string,
+    summary: string,
+    done: bool,
+    stars: int, // mastery, 0 to 3
+}
+
+export struct GoalCard {
+    title: string,
+    tagline: string,
+    blurb: string,
+    meta: string,
+    image: image,
+}
+
+export struct StageCard {
+    number: string,
+    title: string,
+    source: string,
+    blurb: string,
+    image: image,
+    part: string,
+    part-start: bool, // first stage of its part on this road
+    emblem: string, // a music symbol drawn instead of the image, or empty
+    done: int, // lessons finished
+    total: int, // lessons written; 0 = in preparation
+    state: int, // 0 ahead, 1 current, 2 complete
+}
+
+export struct BookCard {
+    title: string,
+    byline: string,
+    blurb: string,
+    used: string,
+    image: image,
+}
+
+export struct NextUp {
+    kicker: string,
+    title: string,
+    source: string,
+    action: string, // empty when there is nothing to start
+    image: image,
+    emblem: string,
+}
+
+export struct PlanItem {
+    title: string,
+    detail: string,
+    done: bool,
+    kind: int, // 0 note reading, 1 lesson, 2 book piece, 3 ear training
+}
+
+export struct DayBar {
+    label: string,
+    minutes: int,
+    today: bool,
+}
+
+export struct Stat {
+    value: string,
+    label: string,
+}
+
+// A stage's picture when it has no painting: its music symbol on a lacquer tile.
+export component Art inherits Rectangle {
+    in property <image> source;
+    in property <string> emblem;
+
+    border-radius: 10px;
+    clip: true;
+    background: @linear-gradient(145deg, #2b2620 0%, #171513 100%);
+    if root.emblem == "": Picture {
+        width: 100%;
+        height: 100%;
+        border-radius: 0;
+        source: root.source;
+    }
+    if root.emblem != "": Rectangle {
+        Rectangle {
+            x: parent.width * 0.55;
+            y: -parent.height * 0.3;
+            width: parent.width;
+            height: parent.width;
+            border-radius: self.width / 2;
+            background: #d6a04a22;
+        }
+        Text {
+            x: (parent.width - self.width) / 2;
+            y: parent.height * 0.7 - 2.012 * self.font-size;
+            font-family: "Bravura";
+            font-size: min(parent.width, parent.height) * 0.62;
+            text: root.emblem;
+            color: #e8c06a;
+        }
+    }
+}
+
+component NavItem inherits Rectangle {
+    in property <string> label;
+    in property <string> icon; // path commands in a 20 × 20 box
+    in property <bool> active;
+    callback clicked;
+
+    height: 40px;
+    border-radius: 7px;
+    background: root.active ? Theme.night-raised : ta.has-hover ? #1f1c19 : transparent;
+    animate background { duration: 120ms; }
+
+    accessible-role: button;
+    accessible-label: root.label;
+    accessible-action-default => { root.clicked(); }
+
+    ta := TouchArea {
+        mouse-cursor: pointer;
+        clicked => { root.clicked(); }
+    }
+    if root.active: Rectangle {
+        x: 0;
+        y: 9px;
+        width: 3px;
+        height: parent.height - 18px;
+        border-radius: 1.5px;
+        background: #d6a04a;
+    }
+    HorizontalLayout {
+        padding-left: 14px;
+        spacing: 12px;
+        VerticalLayout {
+            alignment: center;
+            Path {
+                width: 18px;
+                height: 18px;
+                viewbox-width: 20;
+                viewbox-height: 20;
+                commands: root.icon;
+                stroke: root.active ? Theme.night-text : Theme.night-muted;
+                stroke-width: 1.5px;
+            }
+        }
+        Text {
+            text: root.label;
+            font-size: 14px;
+            font-weight: root.active ? 600 : 400;
+            color: root.active ? Theme.night-text : Theme.night-muted;
+            vertical-alignment: center;
+        }
+    }
+}
+
+export component Sidebar inherits Rectangle {
+    in property <int> page; // 0 today, 1 road, 2 library, 3 setup, 4 stage, 5 practice
+    in property <string> goal-title;
+    in property <float> progress;
+    in property <string> progress-text;
+    in property <string> streak;
+    in property <bool> midi-connected;
+    in property <string> device;
+    callback navigate(page: int);
+
+    width: 236px;
+    background: Theme.night;
+
+    VerticalLayout {
+        padding: 16px;
+        padding-top: 26px;
+        spacing: 4px;
+        HorizontalLayout {
+            padding-left: 10px;
+            padding-bottom: 24px;
+            spacing: 10px;
+            // A tiny keyboard as the mark
+            Rectangle {
+                width: 26px;
+                height: 22px;
+                y: 6px;
+                border-radius: 4px;
+                background: #efe9dc;
+                clip: true;
+                for i in 3: Rectangle {
+                    x: (i * 8 + 5) * 1px;
+                    y: 0;
+                    width: 4px;
+                    height: 13px;
+                    background: #171513;
+                }
+            }
+            Text {
+                text: "PianoMate";
+                font-family: Theme.serif;
+                font-size: 27px;
+                color: Theme.night-text;
+            }
+        }
+        NavItem {
+            label: "Today";
+            icon: "M 3 9.5 L 10 3 L 17 9.5 M 5 8 V 17 H 15 V 8";
+            active: root.page == 0;
+            clicked => { root.navigate(0); }
+        }
+        NavItem {
+            label: "My road";
+            icon: "M 4 17 L 8 10 L 12 13 L 16 4 M 16 4 L 12.5 5 M 16 4 L 17 7.5";
+            active: root.page == 1 || root.page == 4;
+            clicked => { root.navigate(1); }
+        }
+        NavItem {
+            label: "Practice";
+            icon: "M 10 3 V 17 M 6 6 V 14 M 14 6 V 14 M 2.5 8.5 V 11.5 M 17.5 8.5 V 11.5";
+            active: root.page == 5;
+            clicked => { root.navigate(5); }
+        }
+        NavItem {
+            label: "Library";
+            icon: "M 4 4 H 9 V 17 H 4 Z M 9 6 H 13 V 17 H 9 M 13.5 7 L 16.5 6.3 L 18 16.3 L 15 17 Z";
+            active: root.page == 2;
+            clicked => { root.navigate(2); }
+        }
+        NavItem {
+            label: "Setup";
+            icon: "M 3 6 H 17 M 3 14 H 17 M 7 3.5 V 8.5 M 13 11.5 V 16.5";
+            active: root.page == 3;
+            clicked => { root.navigate(3); }
+        }
+        Rectangle { vertical-stretch: 1; }
+
+        Rectangle {
+            vertical-stretch: 0;
+            border-radius: 10px;
+            background: Theme.night-raised;
+            VerticalLayout {
+                padding: 14px;
+                spacing: 7px;
+                HorizontalLayout {
+                    Text {
+                        text: "Your goal";
+                        font-size: 11px;
+                        color: Theme.night-muted;
+                    }
+                    Text {
+                        text: root.streak;
+                        font-size: 11px;
+                        font-weight: 600;
+                        color: #d6a04a;
+                        horizontal-alignment: right;
+                    }
+                }
+                Text {
+                    text: root.goal-title;
+                    font-family: Theme.serif;
+                    font-size: 18px;
+                    color: Theme.night-text;
+                    wrap: word-wrap;
+                }
+                ProgressBar {
+                    value: root.progress;
+                    track: Theme.night-line;
+                    fill: #d6a04a;
+                    height: 4px;
+                }
+                Text {
+                    text: root.progress-text;
+                    font-size: 11px;
+                    color: Theme.night-muted;
+                }
+            }
+        }
+        HorizontalLayout {
+            vertical-stretch: 0;
+            padding: 10px;
+            padding-top: 14px;
+            padding-bottom: 2px;
+            spacing: 9px;
+            VerticalLayout {
+                padding-top: 4px;
+                alignment: start;
+                Rectangle {
+                    width: 7px;
+                    height: 7px;
+                    border-radius: 3.5px;
+                    background: root.midi-connected ? #4fae7d : #6b6458;
+                }
+            }
+            Text {
+                text: root.device;
+                font-size: 11px;
+                color: Theme.night-muted;
+                wrap: word-wrap;
+            }
+        }
+    }
+}
+
+export component LessonRow inherits Rectangle {
+    in property <Card> card;
+    callback clicked;
+
+    height: 84px;
+    border-radius: 8px;
+    background: ta.has-hover ? Theme.paper-deep : transparent;
+    animate background { duration: 120ms; }
+
+    accessible-role: button;
+    accessible-label: card.title;
+    accessible-action-default => { root.clicked(); }
+
+    ta := TouchArea {
+        mouse-cursor: pointer;
+        clicked => { root.clicked(); }
+    }
+    HorizontalLayout {
+        padding-left: 12px;
+        padding-right: 16px;
+        spacing: 18px;
+        if card.number != "": VerticalLayout {
+            alignment: center;
+            Rectangle {
+                width: 38px;
+                height: 38px;
+                border-radius: 19px;
+                border-width: card.done ? 0 : 1.5px;
+                border-color: Theme.brass;
+                background: card.done ? Theme.good : transparent;
+                if card.done: Check {
+                    x: (parent.width - self.width) / 2;
+                    y: (parent.height - self.height) / 2;
+                    color: #ffffff;
+                }
+                if !card.done: Text {
+                    width: 100%;
+                    height: 100%;
+                    text: card.number;
+                    font-size: 13px;
+                    font-weight: 600;
+                    color: Theme.brass;
+                    horizontal-alignment: center;
+                    vertical-alignment: center;
+                }
+            }
+        }
+        VerticalLayout {
+            horizontal-stretch: 1;
+            alignment: center;
+            spacing: 3px;
+            Text {
+                text: card.title;
+                font-family: Theme.serif;
+                font-size: 21px;
+                font-weight: 600;
+                color: Theme.ink;
+                overflow: elide;
+            }
+            Text {
+                text: card.summary;
+                font-size: 14px;
+                color: Theme.muted;
+                overflow: elide;
+            }
+        }
+        if card.done && card.number != "": Text {
+            horizontal-stretch: 0;
+            text: (card.stars >= 1 ? "★" : "☆") + (card.stars >= 2 ? "★" : "☆") + (card.stars >= 3 ? "★" : "☆");
+            font-size: 16px;
+            color: Theme.brass;
+            vertical-alignment: center;
+        }
+        Text {
+            horizontal-stretch: 0;
+            text: card.done ? "Play again" : "Start";
+            font-size: 13px;
+            font-weight: 600;
+            color: card.done ? Theme.muted : Theme.ink;
+            vertical-alignment: center;
+        }
+    }
+}
+
+component StatTile inherits Surface {
+    in property <Stat> stat;
+
+    height: 88px;
+    VerticalLayout {
+        padding-left: 18px;
+        alignment: center;
+        spacing: 2px;
+        Text {
+            text: root.stat.value;
+            font-family: Theme.serif;
+            font-size: 32px;
+            color: Theme.ink;
+        }
+        Text {
+            text: root.stat.label;
+            font-size: 12px;
+            color: Theme.muted;
+        }
+    }
+}
+
+// One dot of the road on the Today page.
+component RoadDot inherits Rectangle {
+    in property <StageCard> stage;
+    in property <bool> first;
+    in property <bool> last;
+    callback clicked;
+
+    height: 34px;
+    horizontal-stretch: 1;
+    Rectangle {
+        x: root.first ? parent.width / 2 : 0;
+        y: (parent.height - self.height) / 2;
+        width: root.first || root.last ? parent.width / 2 : parent.width;
+        height: 2px;
+        background: Theme.hairline;
+    }
+    if stage.state == 2 && !root.last: Rectangle {
+        x: parent.width / 2;
+        y: (parent.height - self.height) / 2;
+        width: parent.width / 2;
+        height: 2px;
+        background: Theme.ink;
+    }
+    if stage.state != 0 && !root.first: Rectangle {
+        x: 0;
+        y: (parent.height - self.height) / 2;
+        width: parent.width / 2;
+        height: 2px;
+        background: Theme.ink;
+    }
+    Rectangle {
+        x: (parent.width - self.width) / 2;
+        y: (parent.height - self.height) / 2;
+        width: stage.state == 1 ? 30px : 24px;
+        height: self.width;
+        border-radius: self.width / 2;
+        border-width: stage.state == 0 ? 1.5px : 0;
+        border-color: Theme.faint;
+        background: stage.state == 2 ? Theme.ink : stage.state == 1 ? Theme.brass : Theme.paper;
+        if stage.state == 2: Check {
+            x: (parent.width - self.width) / 2;
+            y: (parent.height - self.height) / 2;
+            width: 11px;
+            height: 8px;
+            color: Theme.paper;
+        }
+        if stage.state != 2: Text {
+            width: 100%;
+            height: 100%;
+            text: stage.number;
+            font-size: 11px;
+            font-weight: 600;
+            color: stage.state == 1 ? #ffffff : Theme.muted;
+            horizontal-alignment: center;
+            vertical-alignment: center;
+        }
+    }
+    TouchArea {
+        mouse-cursor: pointer;
+        clicked => { root.clicked(); }
+    }
+}
+
+component PlanRow inherits Rectangle {
+    in property <PlanItem> item;
+    in property <bool> last;
+    callback clicked;
+
+    height: 64px;
+    border-radius: 8px;
+    background: ta.has-hover ? Theme.paper-deep : transparent;
+    accessible-role: button;
+    accessible-label: item.title;
+    accessible-action-default => { root.clicked(); }
+    ta := TouchArea {
+        mouse-cursor: pointer;
+        clicked => { root.clicked(); }
+    }
+    HorizontalLayout {
+        padding-left: 10px;
+        padding-right: 12px;
+        spacing: 14px;
+        VerticalLayout {
+            alignment: center;
+            Rectangle {
+                width: 26px;
+                height: 26px;
+                border-radius: 13px;
+                border-width: item.done ? 0 : 1.5px;
+                border-color: Theme.faint;
+                background: item.done ? Theme.good : transparent;
+                if item.done: Check {
+                    x: (parent.width - self.width) / 2;
+                    y: (parent.height - self.height) / 2;
+                    width: 12px;
+                    height: 9px;
+                    color: #ffffff;
+                }
+            }
+        }
+        VerticalLayout {
+            alignment: center;
+            spacing: 2px;
+            Text {
+                text: item.title;
+                font-size: 14px;
+                font-weight: 600;
+                color: item.done ? Theme.muted : Theme.ink;
+                overflow: elide;
+            }
+            Text {
+                text: item.detail;
+                font-size: 12px;
+                color: Theme.muted;
+                overflow: elide;
+            }
+        }
+    }
+}
+
+export component Today inherits Page {
+    in property <string> greeting;
+    in property <GoalCard> goal;
+    in property <float> progress;
+    in property <string> progress-text;
+    in property <NextUp> next-up;
+    in property <[Stat]> stats;
+    in property <[PlanItem]> plan;
+    in property <[DayBar]> week;
+    in property <string> week-total;
+    in property <[StageCard]> stages; // the current part of the road
+    in property <string> road-title;
+    in property <string> road-line;
+    callback continue;
+    callback plan-item(kind: int);
+    callback open-stage(index: int);
+    callback see-road;
+
+    column: 900px;
+    PageTitle {
+        kicker: root.greeting;
+        title: "Today";
+    }
+
+    // Goal banner
+    Rectangle {
+        height: 200px;
+        border-radius: 14px;
+        clip: true;
+        background: Theme.night;
+        Image {
+            width: 100%;
+            height: 100%;
+            source: root.goal.image;
+            image-fit: cover;
+        }
+        Rectangle {
+            background: @linear-gradient(90deg, #171513f5 0%, #171513d0 45%, #17151320 100%);
+        }
+        VerticalLayout {
+            padding: 26px;
+            alignment: space-between;
+            VerticalLayout {
+                spacing: 6px;
+                Text {
+                    text: "Your goal";
+                    font-size: 12px;
+                    color: #d3c9b5;
+                }
+                Text {
+                    width: min(470px, parent.width);
+                    text: root.goal.title;
+                    font-family: Theme.serif;
+                    font-size: 30px;
+                    color: #ffffff;
+                    wrap: word-wrap;
+                }
+            }
+            VerticalLayout {
+                spacing: 8px;
+                ProgressBar {
+                    width: min(320px, parent.width);
+                    value: root.progress;
+                    track: #ffffff38;
+                    fill: #e0a63f;
+                }
+                Text {
+                    text: root.progress-text;
+                    font-size: 12px;
+                    color: #e2dacb;
+                }
+            }
+        }
+    }
+    Rectangle { height: 16px; }
+
+    // Up next
+    Surface {
+        height: 128px;
+        border-color: Theme.brass;
+        HorizontalLayout {
+            padding: 14px;
+            padding-right: 22px;
+            spacing: 18px;
+            Art {
+                width: 92px;
+                source: root.next-up.image;
+                emblem: root.next-up.emblem;
+            }
+            VerticalLayout {
+                horizontal-stretch: 1;
+                alignment: center;
+                spacing: 3px;
+                Text {
+                    text: root.next-up.kicker;
+                    font-size: 12px;
+                    color: Theme.brass;
+                    font-weight: 600;
+                    overflow: elide;
+                }
+                Text {
+                    text: root.next-up.title;
+                    font-family: Theme.serif;
+                    font-size: 26px;
+                    font-weight: 600;
+                    color: Theme.ink;
+                    overflow: elide;
+                }
+                Text {
+                    text: root.next-up.source;
+                    font-family: Theme.serif;
+                    font-italic: true;
+                    font-size: 15px;
+                    color: Theme.muted;
+                    overflow: elide;
+                }
+            }
+            if root.next-up.action != "": VerticalLayout {
+                horizontal-stretch: 0;
+                alignment: center;
+                Btn {
+                    text: root.next-up.action;
+                    clicked => { root.continue(); }
+                }
+            }
+        }
+    }
+    Rectangle { height: 16px; }
+
+    HorizontalLayout {
+        spacing: 16px;
+        for stat in root.stats: StatTile {
+            stat: stat;
+        }
+    }
+    Rectangle { height: 16px; }
+
+    HorizontalLayout {
+        spacing: 16px;
+        // Today's practice plan
+        Surface {
+            horizontal-stretch: 3;
+            VerticalLayout {
+                padding: 18px;
+                padding-bottom: 10px;
+                spacing: 4px;
+                HorizontalLayout {
+                    padding-left: 10px;
+                    padding-bottom: 6px;
+                    Text {
+                        text: "Today's practice";
+                        font-family: Theme.serif;
+                        font-size: 21px;
+                        color: Theme.ink;
+                    }
+                }
+                for item in root.plan: PlanRow {
+                    item: item;
+                    clicked => { root.plan-item(item.kind); }
+                }
+            }
+        }
+        // The week at a glance
+        Surface {
+            horizontal-stretch: 2;
+            VerticalLayout {
+                padding: 18px;
+                padding-left: 22px;
+                spacing: 4px;
+                Text {
+                    text: "This week";
+                    font-family: Theme.serif;
+                    font-size: 21px;
+                    color: Theme.ink;
+                }
+                Text {
+                    text: root.week-total;
+                    font-size: 12px;
+                    color: Theme.muted;
+                }
+                Rectangle { height: 8px; }
+                HorizontalLayout {
+                    vertical-stretch: 1;
+                    min-height: 150px;
+                    spacing: 8px;
+                    for day in root.week: VerticalLayout {
+                        spacing: 6px;
+                        Text {
+                            text: day.minutes > 0 ? day.minutes : "";
+                            font-size: 11px;
+                            color: Theme.muted;
+                            horizontal-alignment: center;
+                        }
+                        Rectangle {
+                            vertical-stretch: 1;
+                            Rectangle {
+                                property <float> share: min(1, day.minutes / 30);
+                                y: parent.height - self.height;
+                                height: max(4px, parent.height * self.share);
+                                border-radius: 4px;
+                                background: day.today ? Theme.brass : day.minutes > 0 ? Theme.ink : Theme.hairline;
+                                animate height { duration: 300ms; easing: ease-out; }
+                            }
+                        }
+                        Text {
+                            text: day.label;
+                            font-size: 11px;
+                            font-weight: day.today ? 700 : 400;
+                            color: day.today ? Theme.ink : Theme.muted;
+                            horizontal-alignment: center;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    Rectangle { height: 30px; }
+
+    // The current part of the road
+    HorizontalLayout {
+        padding-bottom: 12px;
+        Text {
+            text: root.road-title;
+            font-size: 13px;
+            font-weight: 600;
+            color: Theme.ink;
+        }
+        Link {
+            text: "See the whole road";
+            clicked => { root.see-road(); }
+        }
+    }
+    HorizontalLayout {
+        for stage[i] in root.stages: RoadDot {
+            stage: stage;
+            first: i == 0;
+            last: i == root.stages.length - 1;
+            clicked => { root.open-stage(i); }
+        }
+    }
+    Rectangle { height: 10px; }
+    Text {
+        text: root.road-line;
+        font-size: 13px;
+        color: Theme.muted;
+        wrap: word-wrap;
+    }
+}
+
+component StageRow inherits Rectangle {
+    in property <StageCard> stage;
+    in property <bool> first;
+    in property <bool> last;
+    callback clicked;
+
+    height: stage.part-start ? 196px : 140px;
+    property <length> top: stage.part-start ? 56px : 0;
+
+    if stage.part-start: Text {
+        x: 0;
+        y: root.first ? 4px : 18px;
+        text: stage.part;
+        font-family: Theme.serif;
+        font-size: 24px;
+        color: Theme.ink;
+    }
+
+    // Rail
+    Rectangle {
+        x: 15px;
+        y: root.first || stage.part-start ? root.top + 28px : 0;
+        width: 2px;
+        height: root.last ? root.top + 28px - self.y : parent.height - self.y;
+        background: stage.state == 2 ? Theme.ink : Theme.hairline;
+    }
+    Rectangle {
+        x: 16px - self.width / 2;
+        y: root.top + 28px - self.height / 2;
+        width: stage.state == 1 ? 22px : 16px;
+        height: self.width;
+        border-radius: self.width / 2;
+        border-width: stage.state == 0 ? 1.5px : 0;
+        border-color: Theme.faint;
+        background: stage.state == 2 ? Theme.ink : stage.state == 1 ? Theme.brass : Theme.paper;
+    }
+
+    Surface {
+        x: 48px;
+        y: root.top;
+        width: parent.width - 48px;
+        height: parent.height - root.top - 12px;
+        hover: ta.has-hover;
+        border-width: stage.state == 1 ? 1.5px : 1px;
+        border-color: stage.state == 1 ? Theme.brass : ta.has-hover ? Theme.faint : Theme.hairline;
+
+        accessible-role: button;
+        accessible-label: stage.title;
+        accessible-action-default => { root.clicked(); }
+
+        ta := TouchArea {
+            mouse-cursor: pointer;
+            clicked => { root.clicked(); }
+        }
+        HorizontalLayout {
+            padding: 12px;
+            padding-right: 20px;
+            spacing: 18px;
+            Art {
+                width: 96px;
+                source: stage.image;
+                emblem: stage.emblem;
+                opacity: stage.total == 0 ? 0.55 : 1;
+            }
+            VerticalLayout {
+                alignment: center;
+                spacing: 3px;
+                HorizontalLayout {
+                    alignment: start;
+                    spacing: 10px;
+                    Text {
+                        text: "Stage \{stage.number}";
+                        font-size: 12px;
+                        font-weight: 600;
+                        color: stage.state == 1 ? Theme.brass : Theme.muted;
+                    }
+                    Text {
+                        text: stage.total == 0 ? "In preparation" : stage.state == 2 ? "Complete" : stage.state == 1 ? "You are here" : "";
+                        font-size: 12px;
+                        color: stage.state == 2 ? Theme.good : Theme.muted;
+                    }
+                }
+                Text {
+                    text: stage.title;
+                    font-family: Theme.serif;
+                    font-size: 22px;
+                    font-weight: 600;
+                    color: Theme.ink;
+                    overflow: elide;
+                }
+                Text {
+                    text: stage.source != "" && stage.total > 0 ? stage.source : stage.blurb;
+                    font-family: Theme.serif;
+                    font-italic: stage.source != "" && stage.total > 0;
+                    font-size: 14px;
+                    color: Theme.muted;
+                    overflow: elide;
+                }
+                if stage.total > 0: HorizontalLayout {
+                    padding-top: 4px;
+                    spacing: 12px;
+                    VerticalLayout {
+                        alignment: center;
+                        ProgressBar {
+                            width: 160px;
+                            value: stage.done / stage.total;
+                            fill: stage.state == 2 ? Theme.good : Theme.brass;
+                        }
+                    }
+                    Text {
+                        text: "\{stage.done} of \{stage.total} \{stage.total == 1 ? "lesson" : "lessons"}";
+                        font-size: 12px;
+                        color: Theme.muted;
+                        vertical-alignment: center;
+                    }
+                }
+            }
+        }
+    }
+}
+
+export component Road inherits Page {
+    in property <GoalCard> goal;
+    in property <[StageCard]> stages;
+    callback open-stage(index: int);
+
+    PageTitle {
+        title: "My road";
+        subtitle: root.goal.blurb;
+    }
+    for stage[i] in root.stages: StageRow {
+        stage: stage;
+        first: i == 0;
+        last: i == root.stages.length - 1 || root.stages[i + 1].part-start;
+        clicked => { root.open-stage(i); }
+    }
+}
+
+export component StagePage inherits Page {
+    in property <StageCard> stage;
+    in property <string> position;
+    in property <[Card]> lessons;
+    callback back;
+    callback open-lesson(index: int);
+
+    Back {
+        text: "My road";
+        clicked => { root.back(); }
+    }
+    Rectangle { height: 14px; }
+    HorizontalLayout {
+        spacing: 26px;
+        VerticalLayout {
+            alignment: start;
+            Art {
+                width: 170px;
+                height: 196px;
+                source: stage.image;
+                emblem: stage.emblem;
+                drop-shadow-blur: 14px;
+                drop-shadow-color: #00000030;
+                drop-shadow-offset-y: 4px;
+            }
+        }
+        VerticalLayout {
+            alignment: start;
+            spacing: 8px;
+            Text {
+                text: root.position;
+                font-size: 12px;
+                font-weight: 600;
+                color: Theme.brass;
+            }
+            Text {
+                text: stage.title;
+                font-family: Theme.serif;
+                font-size: 36px;
+                color: Theme.ink;
+                wrap: word-wrap;
+            }
+            Text {
+                text: stage.blurb;
+                font-size: 15px;
+                color: Theme.muted;
+                wrap: word-wrap;
+            }
+            if stage.source != "": Text {
+                text: "Drawn from \{stage.source}";
+                font-family: Theme.serif;
+                font-italic: true;
+                font-size: 16px;
+                color: Theme.ink;
+                wrap: word-wrap;
+            }
+            if stage.total > 0: HorizontalLayout {
+                padding-top: 6px;
+                spacing: 12px;
+                VerticalLayout {
+                    alignment: center;
+                    ProgressBar {
+                        width: 200px;
+                        value: stage.done / stage.total;
+                        fill: stage.state == 2 ? Theme.good : Theme.brass;
+                    }
+                }
+                Text {
+                    text: "\{stage.done} of \{stage.total} lessons done";
+                    font-size: 12px;
+                    color: Theme.muted;
+                }
+            }
+        }
+    }
+    Rectangle { height: 34px; }
+    if root.lessons.length > 0: SectionHead {
+        title: "Lessons";
+        note: "The keyboard checks every note";
+    }
+    for card[i] in root.lessons: LessonRow {
+        card: card;
+        clicked => { root.open-lesson(i); }
+    }
+    if stage.total == 0: VerticalLayout {
+        padding-top: 22px;
+        Text {
+            text: "This stage is still being written. The stages before it are ready to play now.";
+            font-family: Theme.serif;
+            font-size: 19px;
+            color: Theme.muted;
+            wrap: word-wrap;
+        }
+    }
+}
+
+component DrillCard inherits Surface {
+    in property <string> title;
+    in property <string> blurb;
+    in property <image> art;
+    in property <[string]> levels;
+    in property <int> level;
+    in property <[Stat]> stats;
+    callback pick-level(index: int);
+    callback begin;
+
+    VerticalLayout {
+        padding: 22px;
+        spacing: 12px;
+        HorizontalLayout {
+            spacing: 18px;
+            Picture {
+                width: 64px;
+                height: 64px;
+                source: root.art;
+            }
+            VerticalLayout {
+                alignment: center;
+                spacing: 3px;
+                Text {
+                    text: root.title;
+                    font-family: Theme.serif;
+                    font-size: 25px;
+                    color: Theme.ink;
+                }
+                Text {
+                    text: root.blurb;
+                    font-size: 13px;
+                    color: Theme.muted;
+                    wrap: word-wrap;
+                }
+            }
+        }
+        HorizontalLayout {
+            alignment: start;
+            spacing: 8px;
+            for name[i] in root.levels: Chip {
+                text: name;
+                selected: i == root.level;
+                clicked => { root.pick-level(i); }
+            }
+        }
+        HorizontalLayout {
+            spacing: 26px;
+            for stat in root.stats: VerticalLayout {
+                Text {
+                    text: stat.value;
+                    font-family: Theme.serif;
+                    font-size: 26px;
+                    color: Theme.ink;
+                }
+                Text {
+                    text: stat.label;
+                    font-size: 12px;
+                    color: Theme.muted;
+                }
+            }
+            Rectangle { horizontal-stretch: 1; }
+            VerticalLayout {
+                alignment: center;
+                Btn {
+                    text: "Start a round";
+                    clicked => { root.begin(); }
+                }
+            }
+        }
+    }
+}
+
+export component Practice inherits Page {
+    in property <[string]> reading-levels;
+    in property <int> reading-level;
+    in property <[Stat]> reading-stats;
+    in property <[Stat]> weak-notes;
+    in property <[string]> ear-levels;
+    in property <int> ear-level;
+    in property <[Stat]> ear-stats;
+    in property <image> reading-art;
+    in property <image> ear-art;
+    in property <[string]> sight-levels;
+    in property <int> sight-level;
+    in property <[Stat]> sight-stats;
+    in property <[string]> rhythm-levels;
+    in property <int> rhythm-level;
+    in property <[Stat]> rhythm-stats;
+    in property <image> sight-art;
+    in property <image> rhythm-art;
+    callback pick-reading-level(index: int);
+    callback pick-ear-level(index: int);
+    callback start-reading;
+    callback start-ear;
+    callback pick-sight-level(index: int);
+    callback pick-rhythm-level(index: int);
+    callback start-sight;
+    callback start-rhythm-reading;
+    in property <[string]> chord-levels;
+    in property <int> chord-level;
+    in property <[Stat]> chord-stats;
+    in property <image> chord-art;
+    callback pick-chord-level(index: int);
+    callback start-chords;
+    in property <bool> metronome-on;
+    in property <int> metronome-bpm;
+    in property <int> metronome-beats;
+    callback metronome-toggle;
+    callback metronome-bpm-by(delta: int);
+    callback metronome-beats-set(beats: int);
+
+    PageTitle {
+        title: "Practice";
+        subtitle: "Short daily drills. Note reading brings back the notes you miss or hesitate on until they are automatic; ear training teaches you to hear what you play.";
+    }
+    DrillCard {
+        title: "Note reading";
+        blurb: "A note appears on the staff: play it. Twenty notes a round.";
+        art: root.reading-art;
+        levels: root.reading-levels;
+        level: root.reading-level;
+        stats: root.reading-stats;
+        pick-level(i) => { root.pick-reading-level(i); }
+        begin => { root.start-reading(); }
+    }
+    if root.weak-notes.length > 0: VerticalLayout {
+        padding-top: 14px;
+        padding-left: 4px;
+        spacing: 10px;
+        Text {
+            text: "Notes to work on";
+            font-size: 13px;
+            font-weight: 600;
+            color: Theme.ink;
+        }
+        HorizontalLayout {
+            alignment: start;
+            spacing: 10px;
+            for note in root.weak-notes: Rectangle {
+                width: 116px;
+                height: 58px;
+                border-radius: 10px;
+                background: Theme.brass-soft;
+                VerticalLayout {
+                    alignment: center;
+                    Text {
+                        text: note.value;
+                        font-family: Theme.serif;
+                        font-size: 20px;
+                        color: Theme.ink;
+                        horizontal-alignment: center;
+                    }
+                    Text {
+                        text: note.label;
+                        font-size: 11px;
+                        color: Theme.muted;
+                        horizontal-alignment: center;
+                    }
+                }
+            }
+        }
+    }
+    Rectangle { height: 18px; }
+    DrillCard {
+        title: "Ear training";
+        blurb: "Hear two notes and name the interval between them. Ten intervals a round.";
+        art: root.ear-art;
+        levels: root.ear-levels;
+        level: root.ear-level;
+        stats: root.ear-stats;
+        pick-level(i) => { root.pick-ear-level(i); }
+        begin => { root.start-ear(); }
+    }
+    Rectangle { height: 18px; }
+    DrillCard {
+        title: "Sight-reading";
+        blurb: "Three new passages every round, never the same twice. Read ahead and keep going.";
+        art: root.sight-art;
+        levels: root.sight-levels;
+        level: root.sight-level;
+        stats: root.sight-stats;
+        pick-level(i) => { root.pick-sight-level(i); }
+        begin => { root.start-sight(); }
+    }
+    Rectangle { height: 18px; }
+    DrillCard {
+        title: "Rhythm reading";
+        blurb: "Four new two-bar rhythms to tap in time with the metronome.";
+        art: root.rhythm-art;
+        levels: root.rhythm-levels;
+        level: root.rhythm-level;
+        stats: root.rhythm-stats;
+        pick-level(i) => { root.pick-rhythm-level(i); }
+        begin => { root.start-rhythm-reading(); }
+    }
+    Rectangle { height: 18px; }
+    DrillCard {
+        title: "Chord finding";
+        blurb: "A chord is named, you play it. The arranger's most-used skill, trained until it is instant.";
+        art: root.chord-art;
+        levels: root.chord-levels;
+        level: root.chord-level;
+        stats: root.chord-stats;
+        pick-level(i) => { root.pick-chord-level(i); }
+        begin => { root.start-chords(); }
+    }
+    Rectangle { height: 18px; }
+    Surface {
+        VerticalLayout {
+            padding: 22px;
+            spacing: 12px;
+            HorizontalLayout {
+                spacing: 18px;
+                VerticalLayout {
+                    alignment: center;
+                    spacing: 3px;
+                    Text {
+                        text: "Metronome";
+                        font-family: Theme.serif;
+                        font-size: 25px;
+                        color: Theme.ink;
+                    }
+                    Text {
+                        text: "A steady click for practising anything. The first beat of each bar is higher.";
+                        font-size: 13px;
+                        color: Theme.muted;
+                        wrap: word-wrap;
+                    }
+                }
+            }
+            HorizontalLayout {
+                spacing: 12px;
+                alignment: start;
+                Btn {
+                    primary: false;
+                    pad: 16px;
+                    text: "−5";
+                    clicked => { root.metronome-bpm-by(-5); }
+                }
+                VerticalLayout {
+                    alignment: center;
+                    min-width: 120px;
+                    Text {
+                        text: "\{root.metronome-bpm}";
+                        font-family: Theme.serif;
+                        font-size: 34px;
+                        color: Theme.ink;
+                        horizontal-alignment: center;
+                    }
+                    Text {
+                        text: "beats per minute";
+                        font-size: 11px;
+                        color: Theme.muted;
+                        horizontal-alignment: center;
+                    }
+                }
+                Btn {
+                    primary: false;
+                    pad: 16px;
+                    text: "+5";
+                    clicked => { root.metronome-bpm-by(5); }
+                }
+                Rectangle { width: 12px; }
+                for n in [2, 3, 4, 6]: VerticalLayout {
+                    alignment: center;
+                    Chip {
+                        text: "\{n}/4";
+                        selected: root.metronome-beats == n;
+                        clicked => { root.metronome-beats-set(n); }
+                    }
+                }
+                Rectangle { horizontal-stretch: 1; }
+                Btn {
+                    text: root.metronome-on ? "Stop" : "Start";
+                    clicked => { root.metronome-toggle(); }
+                }
+            }
+        }
+    }
+}
+
+export component Library inherits Page {
+    in property <[BookCard]> books;
+
+    PageTitle {
+        title: "Library";
+        subtitle: "The classics of piano teaching that PianoMate's road draws on. All of them are in the public domain.";
+    }
+    for book in root.books: VerticalLayout {
+        padding-bottom: 16px;
+        Surface {
+            border-color: Theme.hairline;
+            HorizontalLayout {
+                padding: 16px;
+                padding-right: 22px;
+                spacing: 20px;
+                VerticalLayout {
+                    alignment: start;
+                    Picture {
+                        width: 100px;
+                        height: 130px;
+                        source: book.image;
+                    }
+                }
+                VerticalLayout {
+                    alignment: center;
+                    spacing: 5px;
+                    Text {
+                        text: book.title;
+                        font-family: Theme.serif;
+                        font-size: 22px;
+                        font-weight: 600;
+                        color: Theme.ink;
+                        wrap: word-wrap;
+                    }
+                    Text {
+                        text: book.byline;
+                        font-size: 13px;
+                        color: Theme.brass;
+                        font-weight: 600;
+                    }
+                    Text {
+                        text: book.blurb;
+                        font-size: 14px;
+                        color: Theme.muted;
+                        wrap: word-wrap;
+                    }
+                    Text {
+                        text: book.used;
+                        font-size: 12px;
+                        color: Theme.ink;
+                        wrap: word-wrap;
+                    }
+                }
+            }
+        }
+    }
+}
+
+component SettingRow inherits HorizontalLayout {
+    in property <string> title;
+    in property <string> detail;
+
+    padding-top: 16px;
+    padding-bottom: 16px;
+    padding-left: 4px;
+    spacing: 20px;
+    VerticalLayout {
+        horizontal-stretch: 1;
+        alignment: center;
+        spacing: 3px;
+        Text {
+            text: root.title;
+            font-size: 15px;
+            font-weight: 600;
+            color: Theme.ink;
+        }
+        Text {
+            text: root.detail;
+            font-size: 13px;
+            color: Theme.muted;
+            wrap: word-wrap;
+        }
+    }
+    VerticalLayout {
+        horizontal-stretch: 0;
+        alignment: center;
+        @children
+    }
+}
+
+export component Setup inherits Page {
+    in property <Card> calibration;
+    in property <GoalCard> goal;
+    in property <string> device;
+    in property <string> audio;
+    in property <int> theme-mode;
+    in property <bool> names;
+    in property <bool> echo-midi;
+    in property <bool> midi-connected;
+    callback calibrate;
+    callback change-goal;
+    callback set-theme(mode: int);
+    callback toggle-names;
+    callback toggle-echo;
+    in property <bool> show-piano;
+    callback toggle-piano;
+
+    PageTitle {
+        title: "Setup";
+    }
+    SectionHead {
+        title: "Appearance";
+    }
+    SettingRow {
+        title: "Theme";
+        detail: "Light paper or a dark lacquer finish. System follows your desktop.";
+        HorizontalLayout {
+            spacing: 6px;
+            Chip {
+                text: "System";
+                selected: root.theme-mode == 0;
+                clicked => { root.set-theme(0); }
+            }
+            Chip {
+                text: "Light";
+                selected: root.theme-mode == 1;
+                clicked => { root.set-theme(1); }
+            }
+            Chip {
+                text: "Dark";
+                selected: root.theme-mode == 2;
+                clicked => { root.set-theme(2); }
+            }
+        }
+    }
+    SettingRow {
+        title: "Show the on-screen keyboard";
+        detail: "The keyboard strip along the bottom: it lights the keys to play and shades where a diagram is. Handy without a MIDI keyboard; hide it to give the music more room.";
+        Toggle {
+            on: root.show-piano;
+            label: "Show the on-screen keyboard";
+            toggled => { root.toggle-piano(); }
+        }
+    }
+    SettingRow {
+        title: "Letter names in noteheads";
+        detail: "A reading aid, as in the first units of a beginner book. Turn it off once you read fluently.";
+        Toggle {
+            on: root.names;
+            label: "Letter names in noteheads";
+            toggled => { root.toggle-names(); }
+        }
+    }
+    Rectangle { height: 20px; }
+    SectionHead {
+        title: "Timing";
+    }
+    LessonRow {
+        card: root.calibration;
+        clicked => { root.calibrate(); }
+    }
+    Rectangle { height: 30px; }
+    SectionHead {
+        title: "Goal";
+    }
+    HorizontalLayout {
+        padding-top: 16px;
+        padding-left: 4px;
+        spacing: 20px;
+        Picture {
+            width: 120px;
+            height: 76px;
+            source: root.goal.image;
+        }
+        VerticalLayout {
+            horizontal-stretch: 1;
+            alignment: center;
+            spacing: 3px;
+            Text {
+                text: root.goal.title;
+                font-family: Theme.serif;
+                font-size: 22px;
+                font-weight: 600;
+                color: Theme.ink;
+                wrap: word-wrap;
+            }
+            Text {
+                text: "Changing your goal keeps every lesson you have finished.";
+                font-size: 13px;
+                color: Theme.muted;
+                wrap: word-wrap;
+            }
+        }
+        VerticalLayout {
+            horizontal-stretch: 0;
+            alignment: center;
+            Btn {
+                primary: false;
+                text: "Change goal";
+                clicked => { root.change-goal(); }
+            }
+        }
+    }
+    Rectangle { height: 30px; }
+    SectionHead {
+        title: "Devices";
+    }
+    SettingRow {
+        title: "Keyboard";
+        detail: root.midi-connected ? "Connected: \{root.device}. Plugging in or out is picked up within two seconds." : root.device;
+        Rectangle {
+            width: 12px;
+            height: 12px;
+            border-radius: 6px;
+            background: root.midi-connected ? Theme.good : Theme.faint;
+        }
+    }
+    SettingRow {
+        title: "PianoMate's piano sound for your keyboard";
+        detail: "Leave off if your keyboard has its own speakers, so notes are not doubled. Turn on for a silent MIDI controller. Listen and the metronome always sound.";
+        Toggle {
+            on: root.echo-midi;
+            label: "PianoMate's piano sound for your keyboard";
+            toggled => { root.toggle-echo(); }
+        }
+    }
+    VerticalLayout {
+        padding: 4px;
+        padding-top: 8px;
+        spacing: 6px;
+        Text {
+            text: "Sound: \{root.audio}";
+            font-size: 14px;
+            color: Theme.muted;
+            wrap: word-wrap;
+        }
+    }
+}
+
+component GoalRow inherits Surface {
+    in property <GoalCard> goal;
+    callback clicked;
+
+    height: 148px;
+    hover: ta.has-hover;
+    border-width: ta.has-hover ? 1.5px : 1px;
+    border-color: ta.has-hover ? Theme.brass : Theme.hairline;
+
+    accessible-role: button;
+    accessible-label: goal.title;
+    accessible-action-default => { root.clicked(); }
+
+    ta := TouchArea {
+        mouse-cursor: pointer;
+        clicked => { root.clicked(); }
+    }
+    HorizontalLayout {
+        padding: 12px;
+        padding-right: 24px;
+        spacing: 22px;
+        Picture {
+            width: 220px;
+            source: goal.image;
+        }
+        VerticalLayout {
+            alignment: center;
+            spacing: 4px;
+            Text {
+                text: goal.title;
+                font-family: Theme.serif;
+                font-size: 25px;
+                font-weight: 600;
+                color: Theme.ink;
+                wrap: word-wrap;
+            }
+            Text {
+                text: goal.tagline;
+                font-size: 14px;
+                color: Theme.muted;
+                wrap: word-wrap;
+            }
+            Text {
+                text: goal.meta;
+                font-size: 12px;
+                font-weight: 600;
+                color: Theme.brass;
+            }
+        }
+    }
+}
+
+export component Onboarding inherits Page {
+    in property <[GoalCard]> goals;
+    callback pick(index: int);
+
+    column: 820px;
+    Text {
+        text: "PianoMate";
+        font-family: Theme.serif;
+        font-size: 20px;
+        color: Theme.brass;
+    }
+    Rectangle { height: 10px; }
+    PageTitle {
+        title: "What do you want to play?";
+        subtitle: "Choose where you are heading and PianoMate lays out the road: which skills to build, in which order. You can change it later.";
+    }
+    for goal[i] in root.goals: VerticalLayout {
+        padding-bottom: 14px;
+        GoalRow {
+            goal: goal;
+            clicked => { root.pick(i); }
+        }
+    }
+}

@@ -1,0 +1,63 @@
+(
+    id: "f01-hands-and-keys",
+    title: "Your Hands and the Keyboard",
+    summary: "Sit well, number your fingers, and find high, low, loud and soft.",
+    steps: [
+        Explain(
+            text: "Sit on the front half of the bench, forearms level with the keys, feet flat.",
+            show: Figure("posture"),
+        ),
+        Explain(
+            text: "Fingers have numbers. Thumbs are 1, little fingers are 5, in both hands.",
+            show: Hands([]),
+        ),
+        Quiz(
+            question: "Which finger is lit up?",
+            show: Hands([4]),
+            choices: ["3", "4", "5"],
+            answer: 1,
+        ),
+        Quiz(
+            question: "And this one?",
+            show: Hands([2]),
+            choices: ["1", "2", "3"],
+            answer: 1,
+        ),
+        Explain(
+            text: "Left goes lower, right goes higher.",
+            show: Keys((from: "C3", to: "B5", arcs: [("C4", "C3", "lower"), ("C4", "B5", "higher")], marks: [("C4", "you")])),
+        ),
+        Explain(
+            text: "Markings tell you how loud: p soft, mf medium, f loud.",
+            show: Figure("dynamics"),
+        ),
+        Explain(
+            text: "Black keys come in groups of 2 and 3. They are your map.",
+            show: Keys((from: "C4", to: "B5", marks: [("C#4", "2"), ("D#4", "2"), ("F#4", "3"), ("G#4", "3"), ("A#4", "3"), ("C#5", "2"), ("D#5", "2"), ("F#5", "3"), ("G#5", "3"), ("A#5", "3")])),
+        ),
+        Find(
+            prompt: "Start at Middle C, near the centre of your piano. Press the two black keys just to its right.",
+            keys: ["C#4", "D#4"],
+            show: Keys((from: "C4", to: "B4", marks: [("C4", "C")])),
+        ),
+        Find(
+            prompt: "Now the group of three black keys right after them.",
+            keys: ["F#4", "G#4", "A#4"],
+            show: Keys((from: "C4", to: "B4", marks: [("C4", "C")])),
+        ),
+        Explain(
+            text: "White keys use seven letters, A to G, then start again. C sits left of every pair of black keys.",
+            show: Keys((from: "C4", to: "B4", marks: [("C4", "C"), ("D4", "D"), ("E4", "E"), ("F4", "F"), ("G4", "G"), ("A4", "A"), ("B4", "B")])),
+        ),
+        Find(
+            prompt: "Find Middle C and the two Cs above it: each sits just left of a pair of black keys.",
+            keys: ["C4", "C5", "C6"],
+            show: Keys((from: "C4", to: "C6", marks: [("C4", "C")])),
+        ),
+        Find(
+            prompt: "Now the Fs in the same stretch: each sits just left of a group of three black keys.",
+            keys: ["F4", "F5"],
+            show: Keys((from: "C4", to: "C6", marks: [("C4", "C")])),
+        ),
+    ],
+)

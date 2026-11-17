@@ -1,0 +1,48 @@
+(
+    id: "f06-eighths-upbeats",
+    title: "Eighth Notes, Upbeats and Csus4",
+    summary: "Two notes to a beat, tunes that start early, and a chord that leans.",
+    steps: [
+        Explain(
+            text: "An eighth note is half a beat. Two fit in one click: \"1-and\".",
+            show: Figure("note-values"),
+        ),
+        PlayRhythm(
+            prompt: "Quarter, two eighths, quarter, two eighths.",
+            bpm: 72,
+            beats_per_bar: 4,
+            beats: [1.0, 0.5, 0.5, 1.0, 0.5, 0.5],
+        ),
+        Quiz(
+            question: "How many eighth notes fill one beat?",
+            choices: ["1", "2", "4"],
+            answer: 1,
+        ),
+        Explain(
+            text: "Some tunes begin before the first full bar, on an upbeat. Count the missing beats silently.",
+            show: Music("r/3 G4/1 | C5/2 E5/2", ""),
+        ),
+        Play(
+            prompt: "An upbeat, then eighth notes.",
+            rh: "r/3 G4/1@5 | C4/0.5@1 D4 E4 F4 G4/1@5 E4@3 | D4/0.5@2 E4 D4 C4 D4/2@2",
+            beats_per_bar: 4,
+            tips: [
+                "Count the three silent beats before the first note: \"1, 2, 3, and play\".",
+                "Eighth notes in pairs: say \"1-and 2-and\" so each pair is even.",
+            ],
+        ),
+        Explain(
+            text: "Swap E for F in the C chord: Csus4. It leans, then falls back home.",
+            show: Keys((from: "C3", to: "C4", marks: [("C3", "C"), ("F3", "F"), ("G3", "G"), ("E3", "E")], arcs: [("F3", "E3", "resolves")])),
+        ),
+        Play(
+            prompt: "Csus4 to C, twice.",
+            lh: "C3+F3+G3/2@5+2+1 C3+E3+G3/2@5+3+1 | C3+F3+G3/2 C3+E3+G3/2",
+            beats_per_bar: 4,
+            tips: [
+                "Only finger 2 moves: from F down to E. Everything else stays still.",
+                "Lean into the sus chord a little, then let the C chord be softer, like an answer.",
+            ],
+        ),
+    ],
+)

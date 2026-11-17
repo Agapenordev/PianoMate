@@ -1,0 +1,44 @@
+(
+    id: "f13-g7",
+    title: "The G7 Chord",
+    summary: "The chord that pulls home to C.",
+    steps: [
+        Explain(
+            text: "G7 adds F to the G chord. Your left hand plays it close to C position: B, F and G.",
+            show: Keys((from: "G2", to: "G3", marks: [("B2", "5"), ("F3", "2"), ("G3", "1")])),
+        ),
+        Explain(
+            text: "From the C chord, only two fingers move: C slides down to B, E slides up to F.",
+            show: Keys((from: "B2", to: "G3", marks: [("C3", "C"), ("E3", "E"), ("G3", "G"), ("B2", "B"), ("F3", "F")], arcs: [("C3", "B2", "down"), ("E3", "F3", "up")])),
+        ),
+        Find(
+            prompt: "Find the three keys of G7.",
+            keys: ["B2", "F3", "G3"],
+        ),
+        Play(
+            prompt: "C, G7, C. Feel the pull back home.",
+            lh: "C3+E3+G3/2@5+3+1 B2+F3+G3/2@5+2+1 | C3+E3+G3/4@5+3+1",
+            beats_per_bar: 4,
+            hint: true,
+            tips: [
+                "Only two fingers move: C down to B, E up to F. The others stay.",
+                "Listen to G7's tension, then let the C chord sound like arriving home.",
+            ],
+        ),
+        Quiz(
+            question: "Which chord sounds like it wants to go home?",
+            choices: ["C", "G7"],
+            answer: 1,
+        ),
+        Play(
+            prompt: "Mary Had a Little Lamb, with C and G7 below.",
+            rh: "E4/1@3 D4@2 C4@1 D4@2 | E4 E4 E4/2 | D4/1 D4 D4/2 | E4/1 G4@5 G4/2 | E4/1@3 D4 C4 D4 | E4 E4 E4 E4 | D4 D4 E4 D4 | C4/4@1",
+            lh: "C3+E3+G3/4@5+3+1 | C3+E3+G3/4 | B2+F3+G3/4@5+2+1 | C3+E3+G3/4 | C3+E3+G3/4 | C3+E3+G3/4 | B2+F3+G3/4 | C3+E3+G3/4",
+            beats_per_bar: 4,
+            tips: [
+                "Change chords exactly on beat one of the bar.",
+                "Left hand soft and steady, melody singing on top.",
+            ],
+        ),
+    ],
+)

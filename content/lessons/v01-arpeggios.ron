@@ -1,0 +1,58 @@
+(
+    id: "v01-arpeggios",
+    title: "Arpeggios Across the Keyboard",
+    summary: "Sweep a chord over two octaves: the sound that opens half of all piano arrangements.",
+    steps: [
+        Explain(
+            text: "An arpeggio plays a chord's notes one after another, climbing. Over two octaves the thumb must pass under a wide gap, so the hand travels in one smooth arc.",
+            show: Keys((from: "C4", to: "C6", marks: [("C4", "1"), ("E4", "2"), ("G4", "3"), ("C5", "1"), ("E5", "2"), ("G5", "3"), ("C6", "5")], arcs: [("G4", "C5", "thumb under"), ("G5", "C6", "")])),
+        ),
+        Play(
+            prompt: "C major, right hand, up two octaves and back. Slowly first.",
+            rh: "C4/0.5@1 E4@2 G4@3 C5@1 E5@2 G5@3 C6/1@5 | G5/0.5@3 E5@2 C5@1 G4@3 E4@2 C4/1.5@1",
+            beats_per_bar: 4,
+            bpm: 60,
+            tips: [
+                "The thumb starts travelling under as soon as finger 2 plays, long before it is needed.",
+                "Keep the wrist level and let the elbow lead the hand sideways: no twisting at the thumb.",
+                "Every note the same size: listen for bumps where the thumb passes.",
+            ],
+        ),
+        Play(
+            prompt: "Left hand, two octaves up: 5 4 2 1, then finger 3 crosses over.",
+            lh: "C2/0.5@5 E2@4 G2@2 C3@1 E3@3 G3@2 C4/1@1",
+            beats_per_bar: 4,
+            bpm: 60,
+            tips: [
+                "Going up, the left hand crosses finger 3 over the thumb: the mirror of the right hand.",
+                "Let the arm carry the hand; the fingers only press.",
+            ],
+        ),
+        Explain(
+            text: "Split the arpeggio between the hands and it sweeps the whole keyboard: the left hand plays the bottom, the right hand takes over the top. This is the classic opening flourish of solo arrangements.",
+            show: Keys((from: "C2", to: "E5", marks: [("C2", "L5"), ("G2", "L2"), ("C3", "L1"), ("E4", "R1"), ("G4", "R2"), ("C5", "R3"), ("E5", "R5")])),
+        ),
+        Play(
+            prompt: "The sweep: left hand C, G, C, then the right hand carries it up to E.",
+            rh: "r/1.5 E4/0.5@1 G4@2 C5@3 E5/1@5",
+            lh: "C2/0.5@5 G2@2 C3/1@1 r/2",
+            beats_per_bar: 4,
+            bpm: 66,
+            tips: [
+                "Hold the sustain pedal down for the whole sweep if your piano has one, so every note rings.",
+                "No gap at the hand-over: the right thumb lands exactly one eighth after the left thumb.",
+            ],
+        ),
+        Play(
+            prompt: "The same sweep on A minor: the sadder colour of many anime ballads.",
+            rh: "r/1.5 C5/0.5@1 E5@2 A5@3 C6/1@5",
+            lh: "A1/0.5@5 E2@2 A2/1@1 r/2",
+            beats_per_bar: 4,
+            bpm: 66,
+            tips: [
+                "The same hand-over as on C: no gap between the hands.",
+                "Let the A minor colour ring with the pedal down.",
+            ],
+        ),
+    ],
+)

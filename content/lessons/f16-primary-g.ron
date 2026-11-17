@@ -1,0 +1,39 @@
+(
+    id: "f16-primary-g",
+    title: "I, IV and V7 in G",
+    summary: "G, C and D7, then a whole hymn from chord symbols.",
+    steps: [
+        Explain(
+            text: "In G the primary chords are G (I), C (IV) and D7 (V7). Played close together: G-B-D, G-C-E, F♯-C-D.",
+            show: Keys((from: "F#2", to: "E3", marks: [("G2", "I"), ("B2", "I"), ("D3", "I/V7"), ("C3", "IV/V7"), ("E3", "IV"), ("F#2", "V7")])),
+        ),
+        Find(
+            prompt: "Find D7: F sharp, C and D.",
+            keys: ["F#2", "C3", "D3"],
+        ),
+        Play(
+            prompt: "I, IV, I, V7, I in G.",
+            lh: "key=1 G2+B2+D3/2@5+3+1 G2+C3+E3/2@5+2+1 | G2+B2+D3/2 F#2+C3+D3/2@5+2+1 | G2+B2+D3/4",
+            beats_per_bar: 4,
+            hint: true,
+            tips: [
+                "G and D stay under fingers 5 and 1 for most chords; the middle fingers move.",
+                "D7 is F sharp, C, D: the little finger slides down from G to F sharp.",
+            ],
+        ),
+        Explain(
+            text: "Amazing Grace is in 3/4 and starts on an upbeat. Count \"3\" and come in.",
+            show: Figure("pulse"),
+        ),
+        Play(
+            prompt: "Amazing Grace, melody over G, C and D7.",
+            rh: "key=1 r/2 D4/1@1 | G4/2@3 B4/0.5@5 G4/0.5@3 | B4/2@5 A4/1@4 | G4/2@3 E4/1@2 | D4/2@1 D4/1 | G4/2@3 B4/0.5 G4/0.5 | B4/2@5 A4/1@4 | D5/3@5",
+            lh: "r/3 | G2+B2+D3/3@5+3+1 | G2+B2+D3/3 | G2+C3+E3/3@5+2+1 | G2+B2+D3/3@5+3+1 | G2+B2+D3/3 | G2+B2+D3/3 | F#2+C3+D3/3@5+2+1",
+            beats_per_bar: 3,
+            tips: [
+                "Count 3/4: the melody starts on beat three, the upbeat.",
+                "Hold each left-hand chord for the whole bar under the melody.",
+            ],
+        ),
+    ],
+)

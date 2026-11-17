@@ -1,0 +1,57 @@
+(
+    id: "p03-left-hand-patterns",
+    title: "Flowing Left-Hand Patterns",
+    summary: "Turn block chords into the rolling accompaniment of a solo piano arrangement.",
+    steps: [
+        Explain(
+            text: "Arrangements rarely hold block chords. The left hand rolls through them instead: root, 5th, octave, 5th.",
+            show: Keys((from: "C3", to: "C4", marks: [("C3", "5"), ("G3", "2"), ("C4", "1")], arcs: [("C3", "G3", "5th"), ("G3", "C4", "4th")])),
+        ),
+        Play(
+            prompt: "Root, 5th, octave, 5th on C. Fingers 5, 2, 1, 2. Keep the wrist loose.",
+            lh: "C3/0.5@5 G3@2 C4@1 G3@2 C3@5 G3@2 C4@1 G3@2",
+            beats_per_bar: 4,
+            names: true,
+            bpm: 76,
+            tips: [
+                "The hand opens to the octave and closes again: let the wrist turn slightly with it.",
+                "The bass note (finger 5) is a little stronger; the rest flow softly.",
+            ],
+        ),
+        Play(
+            prompt: "The same shape through C, G, Am and F.",
+            lh: "C3/0.5@5 G3@2 C4@1 G3@2 G2@5 D3@2 G3@1 D3@2 | A2@5 E3@2 A3@1 E3@2 F2@5 C3@2 F3@1 C3@2",
+            beats_per_bar: 4,
+            bpm: 76,
+            tips: [
+                "Look ahead to the next root while the pattern is still running.",
+                "The shape never changes, only its starting key.",
+            ],
+        ),
+        Explain(
+            text: "Stretch the top note up a 3rd and you get the wide, ringing 1–5–10 pattern heard all over anime piano covers.",
+            show: Keys((from: "C3", to: "E4", marks: [("C3", "5"), ("G3", "2"), ("E4", "1")], arcs: [("C3", "E4", "10th")])),
+        ),
+        Play(
+            prompt: "1–5–10 on C, then G. Let each note ring into the next.",
+            lh: "C3/0.5@5 G3@2 E4@1 G3@2 G2@5 D3@2 B3@1 D3@2",
+            beats_per_bar: 4,
+            bpm: 66,
+            tips: [
+                "The 10th is a stretch: do not force it. Let the hand rotate and the wrist travel.",
+                "If it hurts, stop and shake out the hand. Stretches build over weeks.",
+            ],
+        ),
+        Play(
+            prompt: "Melody over the rolling left hand. Listen first.",
+            rh: "E5/2@3 G5@5 | D5/2@2 G5@5",
+            lh: "C3/0.5@5 G3@2 C4@1 G3@2 C3@5 G3@2 C4@1 G3@2 | G2@5 D3@2 G3@1 D3@2 G2@5 D3@2 G3@1 D3@2",
+            beats_per_bar: 4,
+            bpm: 72,
+            tips: [
+                "The left hand must be automatic before adding the melody.",
+                "Melody clearly louder; the rolling bass is the background.",
+            ],
+        ),
+    ],
+)

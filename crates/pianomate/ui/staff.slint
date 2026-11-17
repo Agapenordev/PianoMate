@@ -1,0 +1,78 @@
+import { Theme } from "theme.slint";
+
+// One entry of the display list computed by pianomate-core::notation (units: staff spaces).
+export struct StaffItem {
+    kind: int, // 0 rectangle w × h, 1 music glyph, 2 text centred on x, y, 3 brace h tall
+    glyph: string,
+    x: float,
+    y: float,
+    w: float,
+    h: float,
+    size: float, // text size in staff spaces
+    note: int, // index of the event it belongs to, -1 for the staff itself
+}
+
+export component Staff inherits Rectangle {
+    in property <[StaffItem]> items;
+    in property <float> spaces; // total width in staff spaces
+    in property <float> rows; // total height in staff spaces
+    in property <[int]> marks; // per event: 0 plain, 1 right, 2 wrong, 3 next to play
+    in property <float> playhead: -1; // sweeping time marker, in staff spaces; negative = hidden
+    in property <length> space: 16px;
+
+    width: root.spaces * root.space;
+    height: root.rows * root.space;
+
+    for it in root.items: Rectangle {
+        property <int> mark: it.note < 0 || it.note >= root.marks.length ? 0 : root.marks[it.note];
+        property <color> ink: self.mark == 1 ? Theme.good : self.mark == 2 ? Theme.bad : self.mark == 3 ? Theme.brass : Theme.ink;
+        animate ink { duration: 180ms; }
+
+        x: it.x * root.space;
+        y: it.y * root.space;
+        width: it.kind == 0 ? it.w * root.space : 0;
+        height: it.kind == 0 ? max(1px, it.h * root.space) : 0;
+        background: it.kind == 0 ? self.ink : transparent;
+
+        if it.kind == 1: Text {
+            x: 0;
+            // Bravura's ascent is 2.012 em; shift so the glyph's baseline lands on y.
+            y: -2.012 * self.font-size;
+            font-family: "Bravura";
+            font-size: 4 * root.space;
+            text: it.glyph;
+            color: parent.ink;
+        }
+        if it.kind == 2: Text {
+            x: -self.width / 2;
+            y: -self.height / 2;
+            width: 3 * root.space;
+            height: 1.4 * it.size * root.space;
+            horizontal-alignment: center;
+            vertical-alignment: center;
+            font-size: it.size * root.space;
+            font-weight: 700;
+            text: it.glyph;
+            color: parent.ink;
+        }
+        if it.kind == 3: Path {
+            x: 0;
+            y: 0;
+            width: 1.5 * root.space;
+            height: it.h * root.space;
+            viewbox-width: 10;
+            viewbox-height: 100;
+            fill: Theme.ink;
+            commands: "M 9.5 0 C 3 6 8 30 3.5 46 C 2.6 49 0.6 50 0.2 50 C 0.6 50 2.6 51 3.5 54 C 8 70 3 94 9.5 100 C 5.5 93 10 70 5.6 54 C 4.9 51.5 3.4 50.4 2.6 50 C 3.4 49.6 4.9 48.5 5.6 46 C 10 30 5.5 7 9.5 0 Z";
+        }
+    }
+
+    if root.playhead >= 0: Rectangle {
+        x: root.playhead * root.space - 1px;
+        y: 3.5 * root.space;
+        width: 2px;
+        height: (root.rows - 7) * root.space;
+        background: Theme.brass;
+        opacity: 0.75;
+    }
+}

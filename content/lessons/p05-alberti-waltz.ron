@@ -1,0 +1,57 @@
+(
+    id: "p05-alberti-waltz",
+    title: "Alberti and Waltz Basses",
+    summary: "Two classic left-hand engines: the rippling Alberti bass and the oom-pah-pah of a waltz.",
+    steps: [
+        Explain(
+            text: "The Alberti bass breaks a chord into a ripple: lowest, highest, middle, highest. Mozart used it everywhere; ballad arrangements still do.",
+            show: Keys((from: "C3", to: "G3", marks: [("C3", "1st"), ("G3", "2nd, 4th"), ("E3", "3rd")], arcs: [("C3", "G3", "low to high"), ("G3", "E3", "middle")])),
+        ),
+        Play(
+            prompt: "Alberti bass on C: C, G, E, G. Fingers 5, 1, 3, 1.",
+            lh: "C3/0.5@5 G3@1 E3@3 G3@1 C3@5 G3@1 E3@3 G3@1",
+            beats_per_bar: 4,
+            bpm: 66,
+            tips: [
+                "Keep the hand over all three keys; only the fingers move.",
+                "The first note of each group is slightly stronger, the rest soft and even.",
+                "Let the wrist rock gently with the pattern instead of locking it.",
+            ],
+        ),
+        Play(
+            prompt: "Through C, F and G7: the shape stays, only a finger or two shifts.",
+            lh: "C3/0.5@5 G3@1 E3@3 G3@1 C3@5 A3@1 F3@2 A3@1 | B2@5 G3@1 F3@2 G3@1 C3@5 G3@1 E3@3 G3@1",
+            beats_per_bar: 4,
+            bpm: 66,
+            tips: [
+                "For F, keep C at the bottom and move the upper notes up: C, A, F, A.",
+                "For G7, the little finger slides from C down to B.",
+            ],
+        ),
+        Explain(
+            text: "A waltz counts in three. The left hand plays a low bass note on beat one, then the chord twice: oom-pah-pah.",
+            show: Figure("pulse"),
+        ),
+        Play(
+            prompt: "Waltz bass on C and G7. Bass on one, chord on two and three.",
+            lh: "C3/1@5 E3+G3/1@3+1 E3+G3/1 | G2/1@5 F3+G3/1@2+1 F3+G3/1 | C3/1@5 E3+G3/1@3+1 E3+G3/1 | G2/1@5 F3+G3/1@2+1 F3+G3/1",
+            beats_per_bar: 3,
+            bpm: 84,
+            tips: [
+                "The bass note is deep and full; the two chords are light and short.",
+                "The jump from bass to chord is small: keep the hand hovering above both.",
+            ],
+        ),
+        Play(
+            prompt: "A melody over the waltz. Listen first, then hands together slowly.",
+            rh: "E5/3@3 | D5/3@2 | E5/1@3 G5@5 E5@3 | D5/3@2",
+            lh: "C3/1@5 E3+G3/1@3+1 E3+G3/1 | G2/1@5 F3+G3/1@2+1 F3+G3/1 | C3/1@5 E3+G3/1@3+1 E3+G3/1 | G2/1@5 F3+G3/1@2+1 F3+G3/1",
+            beats_per_bar: 3,
+            bpm: 76,
+            tips: [
+                "The melody notes last a whole bar: hold them while the waltz bass moves.",
+                "Count 1-2-3 with a lift on beat one.",
+            ],
+        ),
+    ],
+)

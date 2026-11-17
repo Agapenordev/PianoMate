@@ -1,0 +1,56 @@
+(
+    id: "m01-ode-to-joy",
+    title: "Ode to Joy",
+    summary: "Your first real melody: Beethoven's theme under five fingers.",
+    source: "Ludwig van Beethoven, Symphony No. 9 (1824), theme of the finale",
+    steps: [
+        Explain(
+            text: "Place your right hand so each finger rests on its own white key: thumb on Middle C, then D, E, F, and the little finger on G. This is the C five-finger position. Your hand will not need to move for this whole melody.",
+            show: Keyboard(["C4", "D4", "E4", "F4", "G4"]),
+        ),
+        Explain(
+            text: "Pianists number their fingers 1 to 5, starting from the thumb. Here are your five notes on the staff, played by fingers 1, 2, 3, 4 and 5.",
+            show: Staff(Treble, ["C4", "D4", "E4", "F4", "G4"]),
+        ),
+        Quiz(
+            question: "In this position, which finger plays E?",
+            show: Staff(Treble, ["E4"]),
+            choices: ["Finger 2", "Finger 3", "Finger 4"],
+            answer: 1,
+        ),
+        Play(
+            prompt: "The first half of the theme. It starts on E, finger 3. The marked key leads you.",
+            rh: "E4/1@3 E4 F4@4 G4@5 | G4 F4@4 E4@3 D4@2",
+            beats_per_bar: 4,
+            hint: true,
+            tips: [
+                "Your hand never moves: five fingers on C, D, E, F, G.",
+                "Repeated notes (E E, G G) are played by the same finger: let the key rise between them.",
+            ],
+        ),
+        Play(
+            prompt: "The whole first phrase, read from the staff. The dotted note near the end is held a little longer.",
+            rh: "E4/1 E4 F4 G4 G4 F4 E4 D4 C4 C4 D4 E4 E4/1.5 D4/0.5 D4/2",
+            beats_per_bar: 4,
+            tips: [
+                "The dotted quarter is one and a half beats: hold it, then the eighth comes quickly.",
+                "Shape the phrase: grow a little towards the top G, relax towards the end.",
+            ],
+        ),
+        PlayRhythm(
+            prompt: "Now only the rhythm of the ending: long, short, long. Tap it on any key.",
+            bpm: 76,
+            beats_per_bar: 4,
+            beats: [1.0, 1.0, 1.0, 1.0, 1.5, 0.5, 2.0],
+        ),
+        Play(
+            prompt: "The answering phrase. It is the same until the last three notes, which come home to C.",
+            rh: "E4/1 E4 F4 G4 G4 F4 E4 D4 C4 C4 D4 E4 D4/1.5 C4/0.5 C4/2",
+            beats_per_bar: 4,
+            tips: [
+                "Only the ending differs: D, C, C instead of E, D, D.",
+                "Make the last C sound finished, like the end of a sentence.",
+            ],
+        ),
+    ],
+)

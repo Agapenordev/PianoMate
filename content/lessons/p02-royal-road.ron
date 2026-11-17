@@ -1,0 +1,42 @@
+(
+    id: "p02-royal-road",
+    title: "The Royal Road Progression",
+    summary: "IV–V–iii–vi: the bittersweet climb behind many J-pop and anime songs.",
+    steps: [
+        Explain(
+            text: "Japanese musicians call IV–V–iii–vi the Royal Road. It climbs, almost resolves, then turns minor: hopeful and aching at once.",
+            show: Keys((from: "C4", to: "B4", marks: [("F4", "IV"), ("G4", "V"), ("E4", "iii"), ("A4", "vi")])),
+        ),
+        Explain(
+            text: "In C that is F, G, E minor and A minor. E minor is E–G–B.",
+            show: Keys((from: "E3", to: "C4", marks: [("E3", "E"), ("G3", "G"), ("B3", "B")], arcs: [("E3", "G3", "small 3rd"), ("G3", "B3", "big")])),
+        ),
+        Play(
+            prompt: "The progression, left hand. Lead with your little finger on each root.",
+            lh: "F2+A2+C3/4@5+3+1 | G2+B2+D3/4@5+3+1 | E2+G2+B2/4@5+3+1 | A2+C3+E3/4@5+3+1",
+            beats_per_bar: 4,
+            hint: true,
+            bpm: 70,
+            tips: [
+                "The little finger finds each root first; the other fingers fall into place.",
+                "Keep the chords connected: no silence between them.",
+            ],
+        ),
+        Quiz(
+            question: "Which chord gives the Royal Road its bittersweet turn?",
+            choices: ["V (G)", "iii (E minor)", "IV (F)"],
+            answer: 1,
+        ),
+        Play(
+            prompt: "A line that climbs over it. Listen once, then play.",
+            rh: "A4/2@2 C5@4 | B4/2@3 D5@5 | G4/2@1 B4@3 | A4/4@2",
+            lh: "F2+A2+C3/4@5+3+1 | G2+B2+D3/4 | E2+G2+B2/4 | A2+C3+E3/4",
+            beats_per_bar: 4,
+            bpm: 70,
+            tips: [
+                "Let the E minor bar be the softest: that is where the colour changes.",
+                "Keep the left hand legato so the harmony never has gaps.",
+            ],
+        ),
+    ],
+)

@@ -1,0 +1,42 @@
+(
+    id: "e02-by-ear-tunes",
+    title: "Tunes by Ear",
+    summary: "Longer phrases, found by ear: the step from playing to working songs out yourself.",
+    steps: [
+        Explain(
+            text: "Longer phrases now. Sing the phrase first, then find it: listen for whether each note goes up, down or stays.",
+            show: Figure("listen"),
+        ),
+        Play(
+            prompt: "A round you may know. It starts on Middle C.",
+            rh: "C4/1 D4 E4 C4 | C4 D4 E4 C4 | E4 F4 G4/2 | E4/1 F4 G4/2",
+            hide: true,
+            beats_per_bar: 4,
+            bpm: 92,
+        ),
+        Play(
+            prompt: "The opening of Ode to Joy. It starts on E.",
+            rh: "E4/1 E4 F4 G4 | G4 F4 E4 D4 | C4 C4 D4 E4 | E4/1.5 D4/0.5 D4/2",
+            hide: true,
+            beats_per_bar: 4,
+            bpm: 92,
+        ),
+        Play(
+            prompt: "Jingle Bells, the chorus. It starts on E.",
+            rh: "E4/1 E4 E4/2 | E4/1 E4 E4/2 | E4/1 G4 C4/1.5 D4/0.5 | E4/4",
+            hide: true,
+            beats_per_bar: 4,
+            bpm: 100,
+        ),
+        Play(
+            prompt: "Now a bass line, left hand. It starts on the C below Middle C and walks down.",
+            lh: "C3/2 B2 | A2 G2 | F2 G2 | C3/4",
+            hide: true,
+            beats_per_bar: 4,
+            bpm: 72,
+        ),
+        Explain(
+            text: "To work out a song you love: find its first note, then each next note by ear, then the bass note under each phrase. Slow, patient, one note at a time: that is how every arranger began.",
+        ),
+    ],
+)

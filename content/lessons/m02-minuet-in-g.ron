@@ -1,0 +1,48 @@
+(
+    id: "m02-minuet-in-g",
+    title: "Minuet in G",
+    summary: "A dance from the Bach family notebook, with your first sharp and a moving hand.",
+    source: "Christian Petzold, Minuet in G major, from the Notebook for Anna Magdalena Bach (1725)",
+    steps: [
+        Explain(
+            text: "In 1725 Johann Sebastian Bach's wife Anna Magdalena began a notebook of pieces for the family to learn from. This minuet, long thought to be by Bach himself, was copied into it. Generations of pianists have started here.",
+        ),
+        Explain(
+            text: "The piece is in G major, which uses one black key: F sharp, the black key just to the right of F. A sharp sign in front of a note raises it to the next key on the right.",
+            show: Keyboard(["F#4", "F#5"]),
+        ),
+        Quiz(
+            question: "A sharp sign in front of a note tells you to play...",
+            choices: ["the next key to the left", "the next key to the right", "the note twice"],
+            answer: 1,
+        ),
+        Explain(
+            text: "A minuet is a dance in three: count one, two, three in every bar. Tap the rhythm of the opening two bars first.",
+        ),
+        PlayRhythm(
+            prompt: "Bars 1 and 2: a quarter note, four eighths, then three even quarters.",
+            bpm: 84,
+            beats_per_bar: 3,
+            beats: [1.0, 0.5, 0.5, 0.5, 0.5, 1.0, 1.0, 1.0],
+        ),
+        Play(
+            prompt: "Bars 1 to 4. Start with your little finger on the high D; your hand travels up for the second half.",
+            rh: "key=1 D5/1 G4/0.5 A4 B4 C5 D5/1 G4 G4 E5 C5/0.5 D5 E5 F#5 G5/1 G4 G4",
+            beats_per_bar: 3,
+            hint: true,
+            tips: [
+                "Count 1-2-3: a minuet is a dance, with a light lift on beat one.",
+                "The eighth notes flow as one gesture; the quarters are slightly detached.",
+            ],
+        ),
+        Play(
+            prompt: "Bars 5 to 8, read from the staff. Watch for the F sharp, and hold the last note for a full bar.",
+            rh: "key=1 C5/1 D5/0.5 C5 B4 A4 B4/1 C5/0.5 B4 A4 G4 F#4/1 G4/0.5 A4 B4 G4 A4/3",
+            beats_per_bar: 3,
+            tips: [
+                "Finger 2 or 3 takes F sharp: the key signature makes every F sharp.",
+                "The final note lasts a whole bar: count all three beats.",
+            ],
+        ),
+    ],
+)

@@ -1,0 +1,5 @@
+/target
+/assets/*.sf2
+# Your own copy of a method book and its page scans: personal, never commit or publish.
+/assets/book/
+/*.pdf

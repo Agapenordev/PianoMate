@@ -1,0 +1,69 @@
+(
+    id: "t01-hanon-1",
+    title: "Hanon No. 1",
+    summary: "The most famous finger exercise ever written. Evenness first, speed later.",
+    source: "Charles-Louis Hanon, The Virtuoso Pianist in 60 Exercises (1873), No. 1",
+    steps: [
+        Explain(
+            text: "Hanon's sixty exercises have trained pianists since 1873. Each one is a short pattern that climbs the keyboard one step at a time, so every finger gets the same work. Fast playing is built here: slowly, evenly, with fingers that lift cleanly.",
+        ),
+        Explain(
+            text: "Exercise No. 1 stretches the gap between fingers 1 and 2: you skip a key after the thumb. The fingering is 1, 2, 3, 4, 5, then back down 4, 3, 2.",
+            show: Keyboard(["C4", "E4", "F4", "G4", "A4"]),
+        ),
+        Play(
+            prompt: "Bar 1, right hand. Fingers 1 2 3 4 5 4 3 2. Keep every note the same length and loudness.",
+            rh: "C4/0.25@1 E4@2 F4@3 G4@4 A4@5 G4@4 F4@3 E4@2",
+            beats_per_bar: 2,
+            hint: true,
+            tips: [
+                "Every note exactly the same loudness and length: this exercise is about evenness.",
+                "Lift each finger cleanly from its knuckle; the hand and wrist stay quiet.",
+                "Start slow at 60% in In time mode; speed comes only once it is perfectly even.",
+            ],
+        ),
+        Explain(
+            text: "Now the idea that makes it an exercise: the whole pattern repeats one key higher, starting on D, then on E, and so on up two octaves. Your hand shifts one key and the fingering never changes.",
+        ),
+        Play(
+            prompt: "Bars 1 to 3: the pattern from C, from D, then from E.",
+            rh: "C4/0.25@1 E4@2 F4@3 G4@4 A4@5 G4@4 F4@3 E4@2 D4 F4 G4 A4 B4 A4 G4 F4 E4 G4 A4 B4 C5 B4 A4 G4",
+            beats_per_bar: 2,
+            tips: [
+                "The fingering never changes: only the starting key moves up one.",
+                "Keep the evenness from bar 1 as you shift.",
+            ],
+        ),
+        PlayRhythm(
+            prompt: "Evenness is the whole point. Tap eight perfectly even notes, two to each click.",
+            bpm: 60,
+            beats_per_bar: 4,
+            beats: [0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5],
+            tolerance_ms: 80,
+        ),
+        Explain(
+            text: "At the top the exercise turns around and walks back down. The descending pattern starts on the little finger: 5, 4, 3, 2, 1, then 2, 3, 4. This time the stretch is between fingers 5 and 4.",
+            show: Keyboard(["G5", "E5", "D5", "C5", "B4"]),
+        ),
+        Play(
+            prompt: "The first two descending bars. Fingers 5 4 3 2 1 2 3 4.",
+            rh: "G5/0.25@5 E5@4 D5@3 C5@2 B4@1 C5@2 D5@3 E5@4 F5 D5 C5 B4 A4 B4 C5 D5",
+            tips: [
+                "Going down, the stretch is between fingers 5 and 4.",
+                "Same evenness as going up: listen for any bumps.",
+            ],
+        ),
+        Explain(
+            text: "Hanon wrote every exercise for both hands at once, an octave apart. The left hand plays the same keys with mirrored fingering: going up it starts on the little finger, 5 4 3 2 1 2 3 4.",
+            show: Keyboard(["C3", "E3", "F3", "G3", "A3"]),
+        ),
+        Play(
+            prompt: "Bars 1 and 2 with the left hand alone. This hand is usually the weaker one, so give it time.",
+            lh: "C3/0.25@5 E3@4 F3@3 G3@2 A3@1 G3@2 F3@3 E3@4 D3 F3 G3 A3 B3 A3 G3 F3",
+            tips: [
+                "Start on the little finger, 5 4 3 2 1 2 3 4.",
+                "Slower than the right hand: build the weaker hand patiently.",
+            ],
+        ),
+    ],
+)

@@ -1,0 +1,56 @@
+(
+    id: "f04-thirds-rests-c-chord",
+    title: "3rds, Rests and the C Chord",
+    summary: "Spot skips at a glance, count silence, and play a chord under a melody.",
+    steps: [
+        Explain(
+            text: "A 3rd on the staff: line to line, or space to space.",
+            show: Staff(Treble, ["E4", "G4", "F4", "A4"]),
+        ),
+        Quiz(
+            question: "What is this interval?",
+            show: Music("F4/2 A4/2", ""),
+            choices: ["2nd", "3rd", "5th"],
+            answer: 1,
+        ),
+        Explain(
+            text: "Rests are counted silence: quarter rest 1 beat, half rest 2, whole rest a full bar.",
+            show: Music("r/1 r/2 C4/1 | r/4", ""),
+        ),
+        Quiz(
+            question: "How many beats of silence?",
+            show: Music("r/2", ""),
+            choices: ["1", "2", "4"],
+            answer: 1,
+        ),
+        Explain(
+            text: "C, E and G together: the C chord. Two 3rds stacked.",
+            show: Keys((from: "C3", to: "C4", marks: [("C3", "5"), ("E3", "3"), ("G3", "1")], arcs: [("C3", "E3", "3rd"), ("E3", "G3", "3rd")])),
+        ),
+        Find(
+            prompt: "Find the C chord with your left hand: all three keys.",
+            keys: ["C3", "E3", "G3"],
+        ),
+        Play(
+            prompt: "The chord twice. All three keys before you let go.",
+            lh: "C3+E3+G3/2@5+3+1 C3+E3+G3/2",
+            hint: true,
+            beats_per_bar: 4,
+            tips: [
+                "Drop into the chord from a loose wrist so all three keys sound together.",
+                "Fingers 5, 3 and 1 stay curved; do not let the little finger collapse.",
+            ],
+        ),
+        Play(
+            prompt: "Jingle Bells: melody on top, chord below.",
+            rh: "E4/1@3 E4 E4/2 | E4/1 E4 E4/2 | E4/1 G4@5 C4/1.5@1 D4/0.5@2 | E4/4@3",
+            lh: "C3+E3+G3/4@5+3+1 | r/4 | C3+E3+G3/4 | r/4",
+            beats_per_bar: 4,
+            tips: [
+                "Play the chord softer than the melody: the tune should sing on top.",
+                "Hold the chord for the full four beats while the right hand moves.",
+                "Practise each hand alone first, then together at 60% tempo.",
+            ],
+        ),
+    ],
+)

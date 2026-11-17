@@ -1,0 +1,582 @@
+// Focus screens: a lesson in progress, lesson complete, and timing calibration.
+import { Theme } from "theme.slint";
+import { Btn, Chip } from "widgets.slint";
+import { Staff, StaffItem } from "staff.slint";
+import { DiagramKey, DiagramArc, KeyDiagram, Hands, Posture, NoteValues, Dynamics, Pulse, ListenArt } from "figures.slint";
+
+export struct Choice {
+    text: string,
+    state: int, // 0 untouched, 1 correct, 2 wrong
+}
+
+export component ChoiceBtn inherits Rectangle {
+    in property <Choice> choice;
+    in property <int> index;
+    callback clicked;
+
+    height: 58px;
+    min-width: 130px;
+    border-radius: 6px;
+    border-width: 1px;
+    border-color: choice.state == 1 ? Theme.good : choice.state == 2 ? Theme.hairline : ta.has-hover ? Theme.ink : Theme.hairline;
+    background: choice.state == 1 ? Theme.good : choice.state == 2 ? transparent : ta.has-hover ? Theme.paper-deep : Theme.ivory;
+    opacity: choice.state == 2 ? 0.45 : 1;
+    animate background, border-color, opacity { duration: 140ms; }
+
+    accessible-role: button;
+    accessible-label: choice.text;
+    accessible-action-default => { root.clicked(); }
+
+    Text {
+        x: 14px;
+        height: parent.height;
+        text: root.index + 1;
+        font-size: 12px;
+        color: choice.state == 1 ? #cfe6d9 : Theme.muted;
+        vertical-alignment: center;
+    }
+    ta := TouchArea {
+        enabled: choice.state == 0;
+        mouse-cursor: pointer;
+        clicked => { root.clicked(); }
+    }
+    HorizontalLayout {
+        padding-left: 40px;
+        padding-right: 40px;
+        Text {
+            text: choice.text;
+            horizontal-alignment: center;
+            font-family: Theme.serif;
+            font-size: 22px;
+            color: choice.state == 1 ? #ffffff : Theme.ink;
+            vertical-alignment: center;
+        }
+    }
+}
+
+// Where the hands go, what the music contains, and how to play it well.
+component HandPanel inherits Rectangle {
+    in property <[DiagramKey]> keys;
+    in property <float> whites;
+    in property <[string]> hands;
+    in property <[string]> facts;
+    in property <[string]> tips;
+
+    width: 302px;
+    height: inner.preferred-height;
+    border-radius: 14px;
+    border-width: 1px;
+    border-color: Theme.hairline;
+    background: Theme.ivory;
+    inner := VerticalLayout {
+        padding: 18px;
+        spacing: 8px;
+        Text {
+            text: "Hand position";
+            font-size: 12px;
+            font-weight: 700;
+            color: Theme.brass;
+        }
+        HorizontalLayout {
+            alignment: center;
+            KeyDiagram {
+                keys: root.keys;
+                whites: root.whites;
+                rows: 0;
+                fit-width: 264px;
+                max-key-height: 120px;
+            }
+        }
+        HorizontalLayout {
+            alignment: center;
+            spacing: 14px;
+            for legend in [{c: #f0d79a, t: "right hand"}, {c: #b9d6ea, t: "left hand"}]: HorizontalLayout {
+                spacing: 5px;
+                VerticalLayout {
+                    alignment: center;
+                    Rectangle {
+                        width: 10px;
+                        height: 10px;
+                        border-radius: 3px;
+                        background: legend.c;
+                    }
+                }
+                Text {
+                    text: legend.t;
+                    font-size: 11px;
+                    color: Theme.muted;
+                }
+            }
+        }
+        for line in root.hands: Text {
+            width: 266px;
+            text: line;
+            font-size: 13px;
+            font-weight: 600;
+            color: Theme.ink;
+            wrap: word-wrap;
+        }
+        Rectangle {
+            height: 1px;
+            background: Theme.hairline;
+        }
+        Text {
+            text: "What you are playing";
+            font-size: 12px;
+            font-weight: 700;
+            color: Theme.brass;
+        }
+        for fact in root.facts: Text {
+            width: 266px;
+            text: fact;
+            font-size: 13px;
+            color: Theme.muted;
+            wrap: word-wrap;
+        }
+        if root.tips.length > 0: Rectangle {
+            height: 1px;
+            background: Theme.hairline;
+        }
+        if root.tips.length > 0: Text {
+            text: "How to play it well";
+            font-size: 12px;
+            font-weight: 700;
+            color: Theme.brass;
+        }
+        for tip in root.tips: HorizontalLayout {
+            spacing: 8px;
+            Text {
+                text: "•";
+                font-size: 13px;
+                color: Theme.brass;
+            }
+            Text {
+                width: 250px;
+                text: tip;
+                font-size: 13px;
+                color: Theme.ink;
+                wrap: word-wrap;
+            }
+        }
+    }
+}
+
+export component LessonView inherits Rectangle {
+    in property <string> title;
+    in property <string> source;
+    in property <int> step;
+    in property <int> step-count;
+    in property <int> kind; // 0 explain, 1 quiz, 2 play notes, 3 tap rhythm, 4 find keys
+    // An illustration: "", "keys", "hands", "posture", "note-values", "dynamics" or "pulse"
+    in property <string> figure;
+    in property <[DiagramKey]> diagram-keys;
+    in property <[DiagramArc]> diagram-arcs;
+    in property <float> diagram-whites;
+    in property <int> diagram-rows;
+    in property <[bool]> hands-lit;
+    in property <string> body;
+    in property <[StaffItem]> staff;
+    in property <float> staff-spaces;
+    in property <float> staff-rows;
+    in property <[int]> marks;
+    in property <float> playhead;
+    in property <[Choice]> choices;
+    in property <bool> can-continue;
+    in property <string> action;
+    in property <string> feedback;
+    in property <bool> feedback-good;
+    in property <bool> entered: true;
+    // The hand-position panel beside music to play
+    in property <[DiagramKey]> side-keys;
+    in property <float> side-whites;
+    in property <[string]> side-hands;
+    in property <[string]> side-facts;
+    in property <[string]> side-tips;
+    property <length> main-width: root.width - 80px - (root.kind == 2 ? 330px : 0);
+    callback previous;
+    callback retry;
+    in property <bool> show-piano;
+    in property <bool> in-time;
+    in property <int> tempo;
+    callback set-mode(mode: int);
+    callback set-tempo(percent: int);
+    callback home;
+    callback next;
+    callback choose(index: int);
+    callback listen;
+
+    VerticalLayout {
+        padding: 28px;
+        padding-bottom: 16px;
+
+        HorizontalLayout {
+            height: 30px;
+            Rectangle {
+                width: 110px;
+                accessible-role: button;
+                accessible-label: "Leave lesson";
+                accessible-action-default => { root.home(); }
+                back := TouchArea {
+                    mouse-cursor: pointer;
+                    clicked => { root.home(); }
+                }
+                HorizontalLayout {
+                    alignment: start;
+                    spacing: 8px;
+                    VerticalLayout {
+                        alignment: center;
+                        Path {
+                            width: 6px;
+                            height: 11px;
+                            commands: "M 6 0 L 0 5.5 L 6 11";
+                            stroke: back.has-hover ? Theme.ink : Theme.muted;
+                            stroke-width: 1.6px;
+                        }
+                    }
+                    Text {
+                        text: "Leave lesson";
+                        font-size: 13px;
+                        color: back.has-hover ? Theme.ink : Theme.muted;
+                        vertical-alignment: center;
+                    }
+                }
+            }
+            Text {
+                horizontal-stretch: 1;
+                text: root.title;
+                font-family: Theme.serif;
+                font-italic: true;
+                font-size: 19px;
+                color: Theme.ink;
+                horizontal-alignment: center;
+                vertical-alignment: center;
+                overflow: elide;
+            }
+            Text {
+                width: 110px;
+                text: "\{root.step + 1} of \{root.step-count}";
+                font-size: 13px;
+                color: Theme.muted;
+                horizontal-alignment: right;
+                vertical-alignment: center;
+            }
+        }
+        Rectangle { height: 14px; }
+        HorizontalLayout {
+            height: 3px;
+            spacing: 4px;
+            for i in root.step-count: Rectangle {
+                border-radius: 1.5px;
+                background: i < root.step ? Theme.ink : i == root.step ? Theme.brass : Theme.hairline;
+            }
+        }
+        Text {
+            height: 30px;
+            text: root.source;
+            font-size: 12px;
+            color: Theme.muted;
+            horizontal-alignment: center;
+            vertical-alignment: bottom;
+            overflow: elide;
+        }
+
+        HorizontalLayout {
+            vertical-stretch: 1;
+            spacing: 28px;
+            VerticalLayout {
+                horizontal-stretch: 1;
+                vertical-stretch: 1;
+                alignment: center;
+                spacing: 18px;
+                opacity: root.entered ? 1 : 0;
+                animate opacity { duration: 280ms; easing: ease-out; }
+                HorizontalLayout {
+                    alignment: center;
+                    Text {
+                        width: min(680px, root.main-width);
+                        text: root.body;
+                        font-family: Theme.serif;
+                        font-size: 24px;
+                        color: Theme.ink;
+                        wrap: word-wrap;
+                        horizontal-alignment: center;
+                    }
+                }
+                if root.figure != "": HorizontalLayout {
+                    alignment: center;
+                    Rectangle {
+                        border-radius: 14px;
+                        background: Theme.ivory;
+                        border-width: 1px;
+                        border-color: Theme.hairline;
+                        VerticalLayout {
+                            padding: 22px;
+                            padding-left: 30px;
+                            padding-right: 30px;
+                            if root.figure == "keys": KeyDiagram {
+                                keys: root.diagram-keys;
+                                arcs: root.diagram-arcs;
+                                whites: root.diagram-whites;
+                                rows: root.diagram-rows;
+                            }
+                            if root.figure == "hands": Hands {
+                                lit: root.hands-lit;
+                            }
+                            if root.figure == "posture": Posture { }
+                            if root.figure == "note-values": NoteValues { }
+                            if root.figure == "dynamics": Dynamics { }
+                            if root.figure == "pulse": Pulse { }
+                            if root.figure == "listen": ListenArt { }
+                        }
+                    }
+                }
+                if root.staff.length > 0: HorizontalLayout {
+                    alignment: center;
+                    Staff {
+                        items: root.staff;
+                        spaces: root.staff-spaces;
+                        rows: root.staff-rows;
+                        marks: root.marks;
+                        playhead: root.playhead;
+                        space: min(17px, (root.main-width) / root.staff-spaces, (root.height - 330px) / root.staff-rows);
+                    }
+                }
+                if root.kind == 2 || root.kind == 3: HorizontalLayout {
+                    alignment: center;
+                    spacing: 8px;
+                    if root.kind == 2: Chip {
+                        text: "At my pace";
+                        selected: !root.in-time;
+                        clicked => { root.set-mode(0); }
+                    }
+                    if root.kind == 2: Chip {
+                        text: "In time";
+                        selected: root.in-time;
+                        clicked => { root.set-mode(1); }
+                    }
+                    if root.kind == 2: Rectangle { width: 22px; }
+                    Text {
+                        text: "Tempo";
+                        font-size: 12px;
+                        color: Theme.muted;
+                        vertical-alignment: center;
+                    }
+                    for pct in [60, 80, 100]: Chip {
+                        text: "\{pct}%";
+                        selected: root.tempo == pct;
+                        clicked => { root.set-tempo(pct); }
+                    }
+                }
+                if root.kind == 1: HorizontalLayout {
+                    alignment: center;
+                    spacing: 12px;
+                    for choice[i] in root.choices: ChoiceBtn {
+                        choice: choice;
+                        index: i;
+                        clicked => { root.choose(i); }
+                    }
+                }
+            }
+
+            // Scrolls when a step has many tips, so nothing is cut off.
+            if root.kind == 2: Flickable {
+                width: 302px;
+                content-height: panel.preferred-height + 8px;
+                opacity: root.entered ? 1 : 0;
+                animate opacity { duration: 280ms; easing: ease-out; }
+                panel := HandPanel {
+                    y: 6px;
+                    keys: root.side-keys;
+                    whites: root.side-whites;
+                    hands: root.side-hands;
+                    facts: root.side-facts;
+                    tips: root.side-tips;
+                }
+            }
+        }
+        Text {
+            height: 30px;
+            text: root.feedback;
+            font-size: 15px;
+            font-weight: 600;
+            color: root.feedback-good ? Theme.good : Theme.bad;
+            horizontal-alignment: center;
+        }
+        HorizontalLayout {
+            alignment: center;
+            spacing: 12px;
+            if root.step > 0: Btn {
+                primary: false;
+                pad: 22px;
+                text: "Previous";
+                clicked => { root.previous(); }
+            }
+            if root.kind >= 2: Btn {
+                primary: false;
+                pad: 22px;
+                text: "Retry";
+                clicked => { root.retry(); }
+            }
+            if root.kind == 2: Btn {
+                primary: false;
+                pad: 22px;
+                text: "Listen";
+                clicked => { root.listen(); }
+            }
+            Btn {
+                min-width: 200px;
+                text: root.action;
+                enabled: root.can-continue;
+                clicked => { root.next(); }
+            }
+        }
+        Text {
+            height: 26px;
+            text: root.can-continue ? "or press Enter · ← for the previous step" : root.kind == 1 ? "Pick an answer, or press its number"
+                : root.kind == 3 ? "Tap any key in time with the notes"
+                : root.kind == 4 ? (root.show-piano ? "Find them on the keyboard below" : "Find them on your piano")
+                : root.in-time ? "Start, wait for the count-in, then play with the playhead" : "Play the notes to go on · Space to listen first";
+            font-size: 12px;
+            color: Theme.muted;
+            horizontal-alignment: center;
+            vertical-alignment: bottom;
+        }
+    }
+}
+
+export component Complete inherits Rectangle {
+    in property <string> title;
+    in property <bool> has-next;
+    in property <int> stars;
+    in property <string> star-hint;
+    callback home;
+    callback next;
+    callback retry;
+
+    VerticalLayout {
+        alignment: center;
+        spacing: 10px;
+        HorizontalLayout {
+            alignment: center;
+            Rectangle {
+                width: 44px;
+                height: 2px;
+                background: Theme.brass;
+            }
+        }
+        Rectangle { height: 8px; }
+        Text {
+            text: "Lesson complete";
+            font-family: Theme.serif;
+            font-size: 46px;
+            color: Theme.ink;
+            horizontal-alignment: center;
+        }
+        Text {
+            text: root.title;
+            font-family: Theme.serif;
+            font-italic: true;
+            font-size: 21px;
+            color: Theme.muted;
+            horizontal-alignment: center;
+        }
+        Text {
+            text: (root.stars >= 1 ? "★" : "☆") + " " + (root.stars >= 2 ? "★" : "☆") + " " + (root.stars >= 3 ? "★" : "☆");
+            font-size: 40px;
+            color: Theme.brass;
+            horizontal-alignment: center;
+        }
+        Text {
+            text: root.star-hint;
+            font-size: 14px;
+            color: Theme.muted;
+            horizontal-alignment: center;
+        }
+        Rectangle { height: 22px; }
+        HorizontalLayout {
+            alignment: center;
+            spacing: 12px;
+            Btn {
+                primary: false;
+                text: "Play again";
+                clicked => { root.retry(); }
+            }
+            Btn {
+                primary: !root.has-next;
+                text: "Back to my road";
+                clicked => { root.home(); }
+            }
+            if root.has-next: Btn {
+                text: "Next lesson";
+                clicked => { root.next(); }
+            }
+        }
+    }
+}
+
+export component Calibrate inherits Rectangle {
+    in property <int> taps;
+    in property <string> result;
+    callback home;
+    callback restart;
+
+    VerticalLayout {
+        alignment: center;
+        spacing: 12px;
+        Text {
+            text: "Calibrate timing";
+            font-family: Theme.serif;
+            font-size: 42px;
+            color: Theme.ink;
+            horizontal-alignment: center;
+        }
+        HorizontalLayout {
+            alignment: center;
+            Text {
+                width: min(600px, root.width - 80px);
+                text: "Tap any key along with the click, as evenly as you can. Eight taps is enough.";
+                font-family: Theme.serif;
+                font-size: 22px;
+                color: Theme.muted;
+                wrap: word-wrap;
+                horizontal-alignment: center;
+            }
+        }
+        Rectangle { height: 14px; }
+        HorizontalLayout {
+            alignment: center;
+            spacing: 10px;
+            for i in 8: Rectangle {
+                width: 14px;
+                height: 14px;
+                border-radius: 7px;
+                border-width: 1px;
+                border-color: i < root.taps ? Theme.brass : #b5ac9b;
+                background: i < root.taps ? Theme.brass : transparent;
+                animate background { duration: 120ms; }
+            }
+        }
+        Text {
+            height: 40px;
+            text: root.result;
+            font-size: 15px;
+            font-weight: 600;
+            color: Theme.good;
+            horizontal-alignment: center;
+            vertical-alignment: center;
+        }
+        HorizontalLayout {
+            alignment: center;
+            spacing: 12px;
+            Btn {
+                primary: false;
+                text: "Start over";
+                clicked => { root.restart(); }
+            }
+            Btn {
+                text: "Done";
+                clicked => { root.home(); }
+            }
+        }
+    }
+}

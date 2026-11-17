@@ -1,0 +1,34 @@
+import { Palette } from "std-widgets.slint";
+import "fonts/Bravura.otf";
+import "fonts/EBGaramond-Regular.ttf";
+import "fonts/EBGaramond-Italic.ttf";
+import "fonts/EBGaramond-SemiBold.ttf";
+
+// Printed-score palette: paper, ink, and one brass accent. Green and red only ever mean right and wrong.
+// Dark mode is a lacquered piano at night: warm black, ivory ink, the same brass.
+export global Theme {
+    in-out property <int> mode; // 0 follow the system, 1 light, 2 dark
+    out property <bool> dark: root.mode == 2 || (root.mode == 0 && Palette.color-scheme == ColorScheme.dark);
+
+    out property <color> paper: root.dark ? #191714 : #f5f0e6;
+    out property <color> paper-deep: root.dark ? #2a2621 : #ebe4d3;
+    out property <color> ivory: root.dark ? #221f1b : #fcfaf4; // cards
+    out property <color> raised: root.dark ? #2b2722 : #ffffff; // cards under the pointer
+    out property <color> ink: root.dark ? #efe8da : #1c1a17;
+    out property <color> muted: root.dark ? #a69d8b : #6f685d;
+    out property <color> faint: root.dark ? #6e665a : #b5ac9b;
+    out property <color> hairline: root.dark ? #39342d : #d6cdbb;
+    out property <color> brass: root.dark ? #d6a04a : #a8731a;
+    out property <color> brass-soft: root.dark ? #3a2f1d : #f3e6c8;
+    out property <color> good: root.dark ? #62c492 : #2f7d55;
+    out property <color> good-soft: root.dark ? #1f3a2c : #dcefe4;
+    out property <color> bad: root.dark ? #ec7a70 : #b4232a;
+    out property <color> on-ink: root.dark ? #191714 : #f5f0e6; // text on an ink-coloured button
+    // The sidebar is always lacquer-dark.
+    out property <color> night: root.dark ? #11100e : #171513;
+    out property <color> night-raised: root.dark ? #221f1b : #27231f;
+    out property <color> night-line: #34302a;
+    out property <color> night-text: #efe9dc;
+    out property <color> night-muted: #9a917f;
+    out property <string> serif: "EB Garamond";
+}

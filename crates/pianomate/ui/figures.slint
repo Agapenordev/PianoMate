@@ -1,0 +1,470 @@
+// Drawn teaching figures: posture, hands, note values, loudness, the beat, and keyboard diagrams.
+// Everything uses the theme's ink and brass so it reads on paper and in the dark.
+import { Theme } from "theme.slint";
+
+// A key of a keyboard diagram; x is the left edge in white-key widths.
+export struct DiagramKey {
+    x: float,
+    black: bool,
+    label: string,
+    marked: bool,
+    note: int,
+    found: bool, // found on the keyboard during a find-the-keys step
+    middle: bool, // Middle C, marked under the key so the diagram can be placed on the piano
+    hand: int, // which hand plays a marked key: 0 not said, 1 right, 2 left
+}
+
+// An arc between two key centres (in white-key widths), stacked in rows so labels never collide.
+export struct DiagramArc {
+    x1: float,
+    x2: float,
+    label: string,
+    row: int,
+}
+
+export component KeyDiagram inherits Rectangle {
+    in property <[DiagramKey]> keys;
+    in property <[DiagramArc]> arcs;
+    in property <float> whites;
+    in property <int> rows; // arc rows above the keys
+    in property <length> fit-width: 620px;
+    in property <length> max-key-height: 400px;
+
+    property <length> ww: min(54px, root.fit-width / max(1, root.whites));
+    property <length> arc-h: 30px;
+    property <length> top: root.rows * root.arc-h + (root.rows > 0 ? 10px : 0);
+    property <length> key-h: min(4.2 * root.ww, root.max-key-height);
+    width: root.whites * root.ww;
+    height: root.top + root.key-h + 26px;
+
+    for a in root.arcs: Rectangle {
+        property <length> lift: (a.row + 1) * root.arc-h - 6px;
+        property <length> left: min(a.x1, a.x2) * root.ww;
+        property <length> span: max(1px, abs(a.x2 - a.x1) * root.ww);
+        x: self.left;
+        y: root.top - self.lift;
+        width: self.span;
+        height: self.lift;
+        Path {
+            width: 100%;
+            height: 100%;
+            viewbox-width: self.width / 1px;
+            viewbox-height: self.height / 1px;
+            stroke: Theme.brass;
+            stroke-width: 2px;
+            commands: "M 0 \{self.height / 1px} C 0 \{self.height / 1px * 0.15} \{self.width / 1px} \{self.height / 1px * 0.15} \{self.width / 1px} \{self.height / 1px}";
+        }
+        Rectangle {
+            x: (a.x2 > a.x1 ? parent.width : 0) - 4px;
+            y: parent.height - 4px;
+            width: 8px;
+            height: 8px;
+            border-radius: 4px;
+            background: Theme.brass;
+        }
+        Text {
+            y: -4px;
+            width: parent.width;
+            horizontal-alignment: center;
+            text: a.label;
+            font-size: 12px;
+            font-weight: 600;
+            color: Theme.brass;
+        }
+    }
+
+    // White keys, then black keys on top.
+    for k in root.keys: Rectangle {
+        visible: !k.black;
+        x: k.x * root.ww + 1px;
+        y: root.top;
+        width: root.ww - 2px;
+        height: root.key-h;
+        border-radius: 5px;
+        border-width: 1px;
+        border-color: #00000040;
+        background: k.found ? #a8d5bc : !k.marked ? #fcfaf4 : k.hand == 2 ? #b9d6ea : #f0d79a;
+        animate background { duration: 200ms; }
+        if k.middle: Text {
+            y: parent.height + 6px;
+            width: max(parent.width, 70px);
+            x: (parent.width - self.width) / 2;
+            horizontal-alignment: center;
+            text: "▲ Middle C";
+            font-size: 11px;
+            font-weight: 700;
+            color: Theme.brass;
+        }
+        if k.label != "": Text {
+            y: parent.height - 30px;
+            width: parent.width;
+            horizontal-alignment: center;
+            text: k.label;
+            font-size: min(15px, root.ww * 0.5);
+            font-weight: 700;
+            color: #1c1a17;
+        }
+    }
+    for k in root.keys: Rectangle {
+        visible: k.black;
+        x: k.x * root.ww - self.width / 2;
+        y: root.top;
+        width: root.ww * 0.62;
+        height: root.key-h * 0.6;
+        border-radius: 3px;
+        background: k.found ? #2f7d55 : !k.marked ? #1c1a17 : k.hand == 2 ? #2f6f8f : #a8731a;
+        animate background { duration: 200ms; }
+        if k.label != "": Text {
+            y: parent.height - 22px;
+            width: parent.width;
+            horizontal-alignment: center;
+            text: k.label;
+            font-size: min(12px, root.ww * 0.42);
+            font-weight: 700;
+            color: #ffffff;
+        }
+    }
+}
+
+component Hand inherits Rectangle {
+    in property <bool> left;
+    in property <[bool]> lit; // fingers 1 to 5
+    in property <length> unit: 2.1px; // one viewbox unit
+
+    width: 120 * root.unit;
+    height: 150 * root.unit;
+    Path {
+        width: 100%;
+        height: 100%;
+        viewbox-width: 120;
+        viewbox-height: 150;
+        fill: Theme.ink;
+        stroke: Theme.ink;
+        stroke-width: 3px;
+        commands: root.left ? "M 90.0 84 C 90.0 70 76.0 64 60.0 64 C 40.0 64 22.0 70 20.0 84 L 22.0 124 C 24.0 142 80.0 142 84.0 124 Z M 79.1 91.1 L 103.1 57.1 A 8.5 8.5 0 0 1 116.9 66.9 L 92.9 100.9 Z M 70.5 71.2 L 76.5 15.2 A 7.5 7.5 0 0 1 91.5 16.8 L 85.5 72.8 Z M 52.2 70.0 L 52.2 6.0 A 7.8 7.8 0 0 1 67.8 6.0 L 67.8 70.0 Z M 35.5 72.8 L 29.5 14.8 A 7.5 7.5 0 0 1 44.5 13.2 L 50.5 71.2 Z M 21.8 82.0 L 7.8 38.0 A 6.5 6.5 0 0 1 20.2 34.0 L 34.2 78.0 Z" : "M 30 84 C 30 70 44 64 60 64 C 80 64 98 70 100 84 L 98 124 C 96 142 40 142 36 124 Z M 40.9 91.1 L 16.9 57.1 A 8.5 8.5 0 0 0 3.1 66.9 L 27.1 100.9 Z M 49.5 71.2 L 43.5 15.2 A 7.5 7.5 0 0 0 28.5 16.8 L 34.5 72.8 Z M 67.8 70.0 L 67.8 6.0 A 7.8 7.8 0 0 0 52.2 6.0 L 52.2 70.0 Z M 84.5 72.8 L 90.5 14.8 A 7.5 7.5 0 0 0 75.5 13.2 L 69.5 71.2 Z M 98.2 82.0 L 112.2 38.0 A 6.5 6.5 0 0 0 99.8 34.0 L 85.8 78.0 Z";
+    }
+    Path {
+        width: 100%;
+        height: 100%;
+        viewbox-width: 120;
+        viewbox-height: 150;
+        fill: Theme.paper-deep;
+        commands: root.left ? "M 90.0 84 C 90.0 70 76.0 64 60.0 64 C 40.0 64 22.0 70 20.0 84 L 22.0 124 C 24.0 142 80.0 142 84.0 124 Z M 79.1 91.1 L 103.1 57.1 A 8.5 8.5 0 0 1 116.9 66.9 L 92.9 100.9 Z M 70.5 71.2 L 76.5 15.2 A 7.5 7.5 0 0 1 91.5 16.8 L 85.5 72.8 Z M 52.2 70.0 L 52.2 6.0 A 7.8 7.8 0 0 1 67.8 6.0 L 67.8 70.0 Z M 35.5 72.8 L 29.5 14.8 A 7.5 7.5 0 0 1 44.5 13.2 L 50.5 71.2 Z M 21.8 82.0 L 7.8 38.0 A 6.5 6.5 0 0 1 20.2 34.0 L 34.2 78.0 Z" : "M 30 84 C 30 70 44 64 60 64 C 80 64 98 70 100 84 L 98 124 C 96 142 40 142 36 124 Z M 40.9 91.1 L 16.9 57.1 A 8.5 8.5 0 0 0 3.1 66.9 L 27.1 100.9 Z M 49.5 71.2 L 43.5 15.2 A 7.5 7.5 0 0 0 28.5 16.8 L 34.5 72.8 Z M 67.8 70.0 L 67.8 6.0 A 7.8 7.8 0 0 0 52.2 6.0 L 52.2 70.0 Z M 84.5 72.8 L 90.5 14.8 A 7.5 7.5 0 0 0 75.5 13.2 L 69.5 71.2 Z M 98.2 82.0 L 112.2 38.0 A 6.5 6.5 0 0 0 99.8 34.0 L 85.8 78.0 Z";
+    }
+    // Finger number badges at the fingertips.
+    for tip[i] in [{x: 10, y: 62}, {x: 36, y: 16}, {x: 60, y: 6}, {x: 83, y: 14}, {x: 106, y: 36}]: Rectangle {
+        property <bool> on: root.lit[i];
+        x: ((root.left ? 120 - tip.x : tip.x) * root.unit) - self.width / 2;
+        y: (tip.y + 14) * root.unit - self.height / 2;
+        width: 26px;
+        height: 26px;
+        border-radius: 13px;
+        background: self.on ? Theme.brass : Theme.ink;
+        animate background { duration: 200ms; }
+        Text {
+            text: i + 1;
+            font-size: 14px;
+            font-weight: 700;
+            color: parent.on ? #ffffff : Theme.paper;
+        }
+    }
+    Text {
+        y: parent.height - 18px;
+        width: parent.width;
+        horizontal-alignment: center;
+        text: root.left ? "Left hand" : "Right hand";
+        font-size: 12px;
+        color: Theme.muted;
+    }
+}
+
+export component Hands inherits HorizontalLayout {
+    in property <[bool]> lit;
+    alignment: center;
+    spacing: 40px;
+    Hand {
+        left: true;
+        lit: root.lit;
+    }
+    Hand {
+        left: false;
+        lit: root.lit;
+    }
+}
+
+// Side view of a pianist: bench, forearms level with the keys, feet flat.
+export component Posture inherits Rectangle {
+    property <length> u: 1.25px;
+    width: 420 * root.u;
+    height: 262 * root.u;
+
+    // Floor
+    Rectangle {
+        y: 250 * root.u;
+        height: 1px;
+        background: Theme.hairline;
+    }
+    // Piano: body, keys, legs, music stand
+    Path {
+        width: 100%;
+        height: 100%;
+        viewbox-width: 420;
+        viewbox-height: 262;
+        fill: Theme.ink;
+        commands: "M 286 112 L 420 112 L 420 172 L 286 172 Z M 302 172 L 310 172 L 310 250 L 302 250 Z M 404 172 L 412 172 L 412 250 L 404 250 Z M 338 112 L 344 112 L 360 38 L 354 38 Z";
+    }
+    Rectangle {
+        x: 268 * root.u;
+        y: 106 * root.u;
+        width: 34 * root.u;
+        height: 8 * root.u;
+        border-radius: 2px;
+        background: #fcfaf4;
+        border-width: 1px;
+        border-color: Theme.ink;
+    }
+    // Bench
+    Path {
+        width: 100%;
+        height: 100%;
+        viewbox-width: 420;
+        viewbox-height: 262;
+        fill: Theme.muted;
+        commands: "M 56 160 L 168 160 L 168 172 L 56 172 Z M 66 172 L 74 172 L 74 250 L 66 250 Z M 150 172 L 158 172 L 158 250 L 150 250 Z";
+    }
+    // The front half of the bench, in brass
+    Rectangle {
+        x: 112 * root.u;
+        y: 160 * root.u;
+        width: 56 * root.u;
+        height: 12 * root.u;
+        background: Theme.brass;
+    }
+    // Pianist: limbs as thick strokes, head as a circle
+    Path {
+        width: 100%;
+        height: 100%;
+        viewbox-width: 420;
+        viewbox-height: 262;
+        stroke: Theme.ink;
+        stroke-width: 11px * root.u / 1px;
+        commands: "M 124 150 L 136 78 M 134 84 L 178 116 L 272 112 M 124 152 L 200 154 L 204 242 L 228 246";
+    }
+    Rectangle {
+        x: 126 * root.u;
+        y: 30 * root.u;
+        width: 34 * root.u;
+        height: 34 * root.u;
+        border-radius: self.width / 2;
+        background: Theme.ink;
+    }
+    // Forearm guide
+    Path {
+        width: 100%;
+        height: 100%;
+        viewbox-width: 420;
+        viewbox-height: 262;
+        stroke: Theme.brass;
+        stroke-width: 1.5px;
+        commands: "M 170 98 L 180 98 M 190 98 L 200 98 M 210 98 L 220 98 M 230 98 L 240 98 M 250 98 L 260 98 M 270 98 L 280 98";
+    }
+    Text {
+        x: 186 * root.u;
+        y: 76 * root.u;
+        text: "forearms level";
+        font-size: 13px;
+        font-weight: 600;
+        color: Theme.brass;
+    }
+    Text {
+        x: 96 * root.u;
+        y: 178 * root.u;
+        text: "front half";
+        font-size: 13px;
+        font-weight: 600;
+        color: Theme.brass;
+    }
+    Text {
+        x: 236 * root.u;
+        y: 228 * root.u;
+        text: "feet flat";
+        font-size: 13px;
+        font-weight: 600;
+        color: Theme.brass;
+    }
+}
+
+// One whole note = two halves = four quarters = eight eighths, laid out on one time line.
+export component NoteValues inherits VerticalLayout {
+    spacing: 6px;
+    width: 600px;
+    for row[r] in [
+        {glyph: "\u{E1D2}", count: 1, beats: "4 beats", name: "whole", base: 0.6},
+        {glyph: "\u{E1D3}", count: 2, beats: "2 beats", name: "half", base: 0.86},
+        {glyph: "\u{E1D5}", count: 4, beats: "1 beat", name: "quarter", base: 0.86},
+        {glyph: "\u{E1D7}", count: 8, beats: "½ beat", name: "eighth", base: 0.86},
+    ]: HorizontalLayout {
+        height: 56px;
+        spacing: 12px;
+        VerticalLayout {
+            width: 86px;
+            alignment: center;
+            Text {
+                text: row.name;
+                font-family: Theme.serif;
+                font-size: 19px;
+                color: Theme.ink;
+            }
+            Text {
+                text: row.beats;
+                font-size: 12px;
+                color: Theme.brass;
+                font-weight: 600;
+            }
+        }
+        Rectangle {
+            horizontal-stretch: 1;
+            for i in row.count: Rectangle {
+                x: i * parent.width / row.count + 2px;
+                width: parent.width / row.count - 4px;
+                height: parent.height - 6px;
+                y: 3px;
+                border-radius: 6px;
+                background: Math.mod(i, 2) == 0 ? Theme.paper-deep : Theme.brass-soft;
+                Text {
+                    // Bravura's ascent is 2.012 em; place the baseline low in the cell.
+                    y: parent.height * row.base - 2.012 * self.font-size;
+                    font-family: "Bravura";
+                    font-size: 34px;
+                    text: row.glyph;
+                    color: Theme.ink;
+                }
+            }
+        }
+    }
+}
+
+// Soft, medium and loud: the dynamic marks with a picture of the sound.
+export component Dynamics inherits HorizontalLayout {
+    alignment: center;
+    spacing: 56px;
+    for d[i] in [
+        {glyph: "\u{E520}", name: "piano · soft"},
+        {glyph: "\u{E52D}", name: "mezzo forte · medium"},
+        {glyph: "\u{E522}", name: "forte · loud"},
+    ]: VerticalLayout {
+        spacing: 10px;
+        Rectangle {
+            height: 72px;
+            Text {
+                y: parent.height * 0.75 - 2.012 * self.font-size;
+                font-family: "Bravura";
+                font-size: 64px;
+                text: d.glyph;
+                color: Theme.ink;
+            }
+        }
+        HorizontalLayout {
+            alignment: center;
+            spacing: 4px;
+            height: 70px;
+            for b in 6: VerticalLayout {
+                alignment: end;
+                Rectangle {
+                    width: 8px;
+                    height: (8 + 9 * Math.mod(b * 5, 7)) * (i + 1) * 0.36px + 6px;
+                    border-radius: 3px;
+                    background: i == 2 ? Theme.brass : i == 1 ? Theme.muted : Theme.faint;
+                }
+            }
+        }
+        Text {
+            text: d.name;
+            font-size: 12px;
+            color: Theme.muted;
+            horizontal-alignment: center;
+        }
+    }
+}
+
+// A live beat: four counts, the first one stronger.
+export component Pulse inherits VerticalLayout {
+    property <int> beat: Math.mod(Math.floor(animation-tick() / 700ms), 4);
+    property <float> phase: Math.mod(animation-tick() / 700ms, 1);
+    spacing: 14px;
+    HorizontalLayout {
+        alignment: center;
+        spacing: 34px;
+        for i in 4: Rectangle {
+            property <bool> now: root.beat == i;
+            width: 64px;
+            height: 64px;
+            Rectangle {
+                property <float> grow: parent.now ? 1.0 - 0.35 * root.phase : 0.62;
+                x: (parent.width - self.width) / 2;
+                y: (parent.height - self.height) / 2;
+                width: parent.width * self.grow;
+                height: self.width;
+                border-radius: self.width / 2;
+                background: parent.now ? Theme.brass : Theme.paper-deep;
+                border-width: i == 0 ? 2px : 0;
+                border-color: Theme.brass;
+                Text {
+                    text: i + 1;
+                    font-family: Theme.serif;
+                    font-size: 24px;
+                    color: root.beat == i ? #ffffff : Theme.muted;
+                }
+            }
+        }
+    }
+    Text {
+        text: "count with it: ONE, two, three, four";
+        font-size: 12px;
+        color: Theme.muted;
+        horizontal-alignment: center;
+    }
+}
+
+// Listen and play it back: a speaker sending out sound waves, gently pulsing.
+export component ListenArt inherits VerticalLayout {
+    property <float> phase: Math.mod(animation-tick() / 1400ms, 1);
+    spacing: 12px;
+    alignment: center;
+    HorizontalLayout {
+        alignment: center;
+        Rectangle {
+            width: 200px;
+            height: 120px;
+            Path {
+                x: 40px;
+                y: 30px;
+                width: 60px;
+                height: 60px;
+                viewbox-width: 60;
+                viewbox-height: 60;
+                fill: Theme.ink;
+                commands: "M 4 20 L 18 20 L 36 4 L 36 56 L 18 40 L 4 40 Z";
+            }
+            for i in 3: Path {
+                property <float> wave: Math.mod(root.phase + i / 3, 1);
+                x: 100px;
+                y: 10px;
+                width: 80px;
+                height: 100px;
+                viewbox-width: 80;
+                viewbox-height: 100;
+                stroke: Theme.brass;
+                stroke-width: 3px;
+                opacity: 1 - self.wave;
+                commands: "M \{8 + self.wave * 50} \{50 - 12 - self.wave * 34} Q \{20 + self.wave * 62} 50 \{8 + self.wave * 50} \{50 + 12 + self.wave * 34}";
+            }
+        }
+    }
+    Text {
+        text: "Listen, then play it back. The notes appear once you have it.";
+        font-size: 13px;
+        color: Theme.muted;
+        horizontal-alignment: center;
+    }
+}

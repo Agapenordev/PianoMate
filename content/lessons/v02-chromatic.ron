@@ -1,0 +1,39 @@
+(
+    id: "v02-chromatic",
+    title: "The Chromatic Scale",
+    summary: "Every key, white and black, in a smooth run: the glitter of virtuoso passagework.",
+    steps: [
+        Explain(
+            text: "The chromatic scale plays every key in order. The fingering is simple: thumb on white keys, finger 3 on black keys. Where two white keys meet (E–F and B–C), use 1 then 2.",
+            show: Keys((from: "C4", to: "C5", marks: [("C4", "1"), ("C#4", "3"), ("D4", "1"), ("D#4", "3"), ("E4", "1"), ("F4", "2"), ("F#4", "3"), ("G4", "1"), ("G#4", "3"), ("A4", "1"), ("A#4", "3"), ("B4", "1"), ("C5", "2")])),
+        ),
+        Quiz(
+            question: "In the chromatic scale, which finger plays the black keys?",
+            choices: ["2", "3", "4"],
+            answer: 1,
+        ),
+        Play(
+            prompt: "Right hand, one octave up. Thumb and 3 alternate like a tiny walking motion.",
+            rh: "C4/0.5@1 C#4@3 D4@1 D#4@3 E4@1 F4@2 F#4@3 G4@1 | G#4@3 A4@1 A#4@3 B4@1 C5/2@2",
+            beats_per_bar: 4,
+            bpm: 60,
+            tips: [
+                "Play close to the black keys, with finger 3 reaching in: the hand stays still while the thumb tucks under.",
+                "Keep it even and quiet at first; chromatic runs sound brilliant only when every note is the same size.",
+            ],
+        ),
+        Play(
+            prompt: "Left hand, one octave down from Middle C. Same idea: 1 on white, 3 on black, 1–2 at F–E and C–B.",
+            lh: "C4/0.5@1 B3@2 A#3@3 A3@1 G#3@3 G3@1 F#3@3 F3@1 | E3@2 D#3@3 D3@1 C#3@3 C3/2@1",
+            beats_per_bar: 4,
+            bpm: 60,
+            tips: [
+                "The left hand descending mirrors the right hand ascending: the thumb leads.",
+            ],
+        ),
+        Explain(
+            text: "Arrangers use quick chromatic runs to lead into a big moment. Once each hand is even, use In time and climb the tempo ladder.",
+            show: Figure("pulse"),
+        ),
+    ],
+)

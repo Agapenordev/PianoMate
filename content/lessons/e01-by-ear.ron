@@ -1,0 +1,46 @@
+(
+    id: "e01-by-ear",
+    title: "First Steps by Ear",
+    summary: "Hear a phrase, find it on the keys. The notes appear once you have it.",
+    steps: [
+        Explain(
+            text: "Playing by ear starts small: listen, sing it back, then find it. Press Listen as often as you like; a wrong key just tells you higher or lower.",
+            show: Figure("listen"),
+        ),
+        Play(
+            prompt: "Three notes, starting on Middle C.",
+            rh: "C4/1 D4 E4/2",
+            hide: true,
+            bpm: 72,
+        ),
+        Play(
+            prompt: "Three more, starting on E.",
+            rh: "E4/1 D4 C4/2",
+            hide: true,
+            bpm: 72,
+        ),
+        Play(
+            prompt: "This one skips. It starts on C.",
+            rh: "C4/1 E4 G4/2",
+            hide: true,
+            bpm: 72,
+        ),
+        Play(
+            prompt: "A tune you know, starting on C.",
+            rh: "C4/1 C4 G4 G4 | A4 A4 G4/2",
+            hide: true,
+            beats_per_bar: 4,
+            bpm: 90,
+        ),
+        Play(
+            prompt: "And another, starting on E.",
+            rh: "E4/1 D4 C4 D4 | E4 E4 E4/2",
+            hide: true,
+            beats_per_bar: 4,
+            bpm: 90,
+        ),
+        Explain(
+            text: "That is the whole skill: guess, listen, correct. Any song you can hum can be found this way, one note at a time.",
+        ),
+    ],
+)

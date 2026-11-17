@@ -1,0 +1,52 @@
+(
+    id: "f05-bass-c-staccato",
+    title: "Bass C Position and Staccato",
+    summary: "C, D and E low in the bass, and short, bouncing notes.",
+    steps: [
+        Explain(
+            text: "Bass C position: left little finger on the C below Middle C.",
+            show: Keys((from: "C3", to: "G3", marks: [("C3", "5"), ("D3", "4"), ("E3", "3"), ("F3", "2"), ("G3", "1")])),
+        ),
+        Find(
+            prompt: "Find C, D and E in bass C position.",
+            keys: ["C3", "D3", "E3"],
+            show: Music("", "C3/2 D3 E3/4"),
+        ),
+        Explain(
+            text: "Stems point up below the middle line, down from it upward. They never tell you the hand.",
+            show: Music("E4/1 G4 B4 D5", ""),
+        ),
+        Explain(
+            text: "A dot above or below a note means staccato: short, bouncing off the key.",
+        ),
+        Play(
+            prompt: "Bass C position, staccato.",
+            lh: "C3/1@5 D3@4 E3@3 D3@4 | C3/2@5 r/2",
+            beats_per_bar: 4,
+            names: true,
+            tips: [
+                "Staccato comes from a quick bounce of the finger, not from lifting the whole arm.",
+                "Short notes, but steady timing: the silence between them is even.",
+            ],
+        ),
+        Play(
+            prompt: "Haydn's \"Surprise\" theme: the right hand starts, the left hand finishes.",
+            rh: "C4/1@1 C4 E4@3 E4 | G4@5 G4 E4/2@3 | F4/1@4 F4 D4@2 D4 | r/4",
+            lh: "r/4 | r/4 | r/4 | B3/1@2 B3 G3/2@4",
+            beats_per_bar: 4,
+            tips: [
+                "Light and short: imagine the keys are hot.",
+                "The left hand takes over in the last bar: have it ready in place before then.",
+            ],
+        ),
+        Play(
+            prompt: "The left hand answers an octave lower.",
+            lh: "C3/1@5 C3 E3@3 E3 | G3@1 G3 E3/2@3",
+            beats_per_bar: 4,
+            tips: [
+                "Make it sound like an echo: a little softer than the right hand was.",
+                "Same staccato bounce, short and light.",
+            ],
+        ),
+    ],
+)

@@ -1,0 +1,11 @@
+[workspace]
+resolver = "3"
+members = ["crates/*"]
+
+[workspace.package]
+edition = "2024"
+version = "0.1.0"
+
+# Optimise dependencies in dev builds: the synth runs on the realtime audio thread and crackles unoptimised.
+[profile.dev.package."*"]
+opt-level = 3

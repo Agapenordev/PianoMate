@@ -1,0 +1,46 @@
+(
+    id: "f11-wide-intervals",
+    title: "4ths, 5ths and 6ths",
+    summary: "Read wider intervals by their shape on the staff.",
+    steps: [
+        Explain(
+            text: "Count every letter, both ends included. C up to F is a 4th, to G a 5th, to A a 6th.",
+            show: Keys((from: "C4", to: "A4", marks: [("C4", "C"), ("F4", "4th"), ("G4", "5th"), ("A4", "6th")], arcs: [("C4", "F4", "4th"), ("C4", "G4", "5th"), ("C4", "A4", "6th")])),
+        ),
+        Explain(
+            text: "On the staff: a 4th goes line to space, a 5th line to line, a 6th line to space again, further up.",
+            show: Music("C4/2 F4/2 | C4/2 G4/2 | C4/2 A4/2", ""),
+        ),
+        Quiz(
+            question: "What interval is this?",
+            show: Music("C4/2 G4/2", ""),
+            choices: ["4th", "5th", "6th"],
+            answer: 1,
+        ),
+        Quiz(
+            question: "And this one?",
+            show: Music("E4/2 A4/2", ""),
+            choices: ["4th", "5th", "6th"],
+            answer: 0,
+        ),
+        Play(
+            prompt: "Blocked 5ths: both keys together, moving down the keys.",
+            lh: "C3+G3/2@5+1 B2+F#3/2 | A2+E3/2 G2+D3/2",
+            beats_per_bar: 4,
+            hint: true,
+            tips: [
+                "Fingers 5 and 1 keep the 5th shape; the whole hand moves down.",
+                "Both keys must sound at exactly the same moment.",
+            ],
+        ),
+        Play(
+            prompt: "Twinkle, Twinkle: a 5th up, a 2nd up, then down by steps. Finger 5 stretches to A.",
+            rh: "C4/1@1 C4 G4@4 G4 | A4@5 A4 G4/2@4 | F4/1@3 F4 E4@2 E4 | D4/1 D4 C4/2@1",
+            beats_per_bar: 4,
+            tips: [
+                "Finger 4 plays G so that finger 5 can stretch to A without moving the hand.",
+                "Repeated notes are gentle re-presses of the same key.",
+            ],
+        ),
+    ],
+)

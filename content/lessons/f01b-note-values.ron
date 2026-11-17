@@ -1,0 +1,45 @@
+(
+    id: "f01-note-values",
+    title: "Counting: Quarter, Half and Whole Notes",
+    summary: "The four note values every beginner piece is built from.",
+    steps: [
+        Explain(
+            text: "Music moves on a steady pulse: the beat. Watch it, and count along: 1, 2, 3, 4.",
+            show: Figure("pulse"),
+        ),
+        Explain(
+            text: "One whole note fills four beats. Two halves fill the same time, and four quarters, and eight eighths.",
+            show: Figure("note-values"),
+        ),
+        Quiz(
+            question: "How many beats does this note last?",
+            show: Music("C4/3", ""),
+            choices: ["2", "3", "4"],
+            answer: 1,
+        ),
+        Quiz(
+            question: "Which note lasts four beats?",
+            show: Music("C4/4 C4/2 C4/1", ""),
+            choices: ["The first", "The second", "The third"],
+            answer: 0,
+        ),
+        PlayRhythm(
+            prompt: "Quarters and halves. Count aloud as you tap.",
+            bpm: 72,
+            beats_per_bar: 4,
+            beats: [1.0, 1.0, 2.0, 1.0, 1.0, 2.0],
+        ),
+        PlayRhythm(
+            prompt: "Hold the long ones: dotted half, quarter, whole.",
+            bpm: 72,
+            beats_per_bar: 4,
+            beats: [3.0, 1.0, 4.0],
+        ),
+        PlayRhythm(
+            prompt: "All of them, two bars.",
+            bpm: 76,
+            beats_per_bar: 4,
+            beats: [2.0, 1.0, 1.0, 3.0, 1.0, 4.0],
+        ),
+    ],
+)
