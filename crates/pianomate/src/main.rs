@@ -42,7 +42,7 @@ const READING_ROUND: usize = 20;
 const EAR_ROUND: usize = 10;
 /// Gaps between key presses shorter than this count as practice time.
 const PRACTICE_GAP_MS: f64 = 30_000.0;
-// shortcut: content is read from the working directory; embed it when the app is packaged.
+// shortcut: content is read from disk (working directory, else beside the executable); embed it for a single-file build.
 const CONTENT: &str = "content";
 
 /// What is kept between runs.

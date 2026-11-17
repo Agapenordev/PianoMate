@@ -22,6 +22,7 @@
 - [Controls](#controls)
 - [Writing lessons](#writing-lessons)
 - [Project layout](#project-layout)
+- [Contributing](#contributing)
 - [Credits](#credits)
 - [License](#license)
 
@@ -221,6 +222,17 @@ docs/screenshots/      Images used in this README
 - [midir](https://github.com/Boddlnagg/midir) for MIDI input
 - [rtrb](https://github.com/mgeier/rtrb) for lock-free UI-to-audio messaging
 - [serde](https://serde.rs) and [RON](https://github.com/ron-rs/ron) for content and saves
+
+## Contributing
+
+Lessons, code, and play-testing with a real keyboard are all welcome.
+
+| Document | For |
+|---|---|
+| [ROADMAP.md](ROADMAP.md) | What's done, what's next, and what's out of scope |
+| [ARCHITECTURE.md](ARCHITECTURE.md) | How the app works: crates, threads, the key-press-to-feedback path, persistence |
+| [CONTRIBUTING.md](CONTRIBUTING.md) | Setup, writing lessons, the pull request checklist |
+| [AGENTS.md](AGENTS.md) | Rules and commands for AI coding agents (also `CLAUDE.md`) |
 
 ## Credits
 
